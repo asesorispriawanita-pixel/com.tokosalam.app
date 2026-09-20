@@ -2,14 +2,12 @@ package com.tokosalam.app;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.content.Intent;
-import android.net.Uri;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
 import android.webkit.WebChromeClient;
 import android.webkit.ValueCallback;
-import android.widget.Toast;
+import android.net.Uri;
+import android.content.Intent;
 
 public class MainActivity extends Activity {
 
@@ -27,8 +25,7 @@ public class MainActivity extends Activity {
 
         setContentView(webView);
 
-        WebSettings settings =
-                webView.getSettings();
+        WebSettings settings = webView.getSettings();
 
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
@@ -36,70 +33,7 @@ public class MainActivity extends Activity {
         settings.setAllowContentAccess(true);
 
         /*
-         * Menangani link WhatsApp dan link aplikasi
-         */
-        webView.setWebViewClient(
-                new WebViewClient() {
-
-                    @Override
-                    public boolean shouldOverrideUrlLoading(
-                            WebView view,
-                            String url) {
-
-                        if (url.startsWith("whatsapp://")) {
-
-                            try {
-
-                                Intent intent =
-                                        new Intent(
-                                                Intent.ACTION_VIEW,
-                                                Uri.parse(url)
-                                        );
-
-                                startActivity(intent);
-
-                            } catch (Exception e) {
-
-                                Toast.makeText(
-                                        MainActivity.this,
-                                        "WhatsApp tidak ditemukan",
-                                        Toast.LENGTH_SHORT
-                                ).show();
-
-                            }
-
-                            return true;
-                        }
-
-                        if (url.startsWith("https://wa.me/")) {
-
-                            try {
-
-                                Intent intent =
-                                        new Intent(
-                                                Intent.ACTION_VIEW,
-                                                Uri.parse(url)
-                                        );
-
-                                startActivity(intent);
-
-                            } catch (Exception e) {
-
-                                view.loadUrl(url);
-
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    }
-                }
-        );
-
-
-        /*
-         * Upload foto dari HP
+         * WebView
          */
         webView.setWebChromeClient(
                 new WebChromeClient() {
@@ -111,15 +45,12 @@ public class MainActivity extends Activity {
                             FileChooserParams params) {
 
                         if (filePathCallback != null) {
-
-                            filePathCallback
-                                    .onReceiveValue(null);
+                            filePathCallback.onReceiveValue(null);
                         }
 
                         filePathCallback = callback;
 
-                        Intent intent =
-                                params.createIntent();
+                        Intent intent = params.createIntent();
 
                         try {
 
@@ -131,7 +62,6 @@ public class MainActivity extends Activity {
                         } catch (Exception e) {
 
                             filePathCallback = null;
-
                             return false;
                         }
 
@@ -140,15 +70,13 @@ public class MainActivity extends Activity {
                 }
         );
 
-
         /*
-         * Buka halaman utama
+         * Buka index.html
          */
         webView.loadUrl(
                 "file:///android_asset/index.html"
         );
     }
-
 
     @Override
     protected void onActivityResult(
@@ -162,8 +90,7 @@ public class MainActivity extends Activity {
                 data
         );
 
-        if (requestCode ==
-                FILE_CHOOSER_REQUEST) {
+        if (requestCode == FILE_CHOOSER_REQUEST) {
 
             if (filePathCallback == null) {
                 return;
@@ -171,26 +98,20 @@ public class MainActivity extends Activity {
 
             Uri[] results = null;
 
-            if (resultCode == RESULT_OK &&
-                    data != null) {
+            if (resultCode == RESULT_OK && data != null) {
 
-                Uri uri =
-                        data.getData();
+                Uri uri = data.getData();
 
                 if (uri != null) {
-
-                    results =
-                            new Uri[]{uri};
+                    results = new Uri[]{uri};
                 }
             }
 
-            filePathCallback
-                    .onReceiveValue(results);
+            filePathCallback.onReceiveValue(results);
 
             filePathCallback = null;
         }
     }
-
 
     @Override
     public void onBackPressed() {
