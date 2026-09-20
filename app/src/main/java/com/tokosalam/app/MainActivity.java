@@ -12,95 +12,131 @@ import android.webkit.WebViewClient;
 
 public class MainActivity extends Activity {
 
-private WebView webView;
-private ValueCallback<Uri[]> filePathCallback;
+    private WebView webView;
 
-private static final int FILE_CHOOSER_REQUEST = 1001;
+    private ValueCallback<Uri[]> filePathCallback;
 
-@Override
-protected void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
+    private static final int FILE_CHOOSER_REQUEST = 1001;
 
-    webView = new WebView(this);
-    setContentView(webView);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
 
-    WebSettings settings = webView.getSettings();
+        // Membuat WebView
+        webView = new WebView(this);
+        setContentView(webView);
 
-    settings.setJavaScriptEnabled(true);
-    settings.setDomStorageEnabled(true);
-    settings.setAllowFileAccess(true);
-    settings.setAllowContentAccess(true);
+        // Pengaturan WebView
+        WebSettings settings = webView.getSettings();
 
-    webView.setWebViewClient(new WebViewClient());
+        settings.setJavaScriptEnabled(true);
+        settings.setDomStorageEnabled(true);
 
-    webView.setWebChromeClient(new WebChromeClient() {
+        // Izinkan akses file
+        settings.setAllowFileAccess(true);
+        settings.setAllowContentAccess(true);
 
-        @Override
-        public boolean onShowFileChooser(
-                WebView webView,
-                ValueCallback<Uri[]> filePathCallback,
-                FileChooserParams fileChooserParams) {
+        // WebView biasa
+        webView.setWebViewClient(new WebViewClient());
 
-            if (MainActivity.this.filePathCallback != null) {
-                MainActivity.this.filePathCallback.onReceiveValue(null);
+        // File chooser Android
+        webView.setWebChromeClient(new WebChromeClient() {
+
+            @Override
+            public boolean onShowFileChooser(
+                    WebView webView,
+                    ValueCallback<Uri[]> filePathCallback,
+                    FileChooserParams fileChooserParams) {
+
+                // Batalkan callback sebelumnya jika masih ada
+                if (MainActivity.this.filePathCallback != null) {
+                    MainActivity.this.filePathCallback.onReceiveValue(null);
+                }
+
+                MainActivity.this.filePathCallback =
+                        filePathCallback;
+
+                // Buat pemilih file Android
+                Intent intent =
+                        fileChooserParams.createIntent();
+
+                try {
+
+                    startActivityForResult(
+                            intent,
+                            FILE_CHOOSER_REQUEST
+                    );
+
+                } catch (Exception e) {
+
+                    MainActivity.this.filePathCallback = null;
+
+                    return false;
+                }
+
+                return true;
             }
+        });
 
-            MainActivity.this.filePathCallback = filePathCallback;
-
-            Intent intent = fileChooserParams.createIntent();
-
-            try {
-                startActivityForResult(intent, FILE_CHOOSER_REQUEST);
-            } catch (Exception e) {
-                MainActivity.this.filePathCallback = null;
-                return false;
-            }
-
-            return true;
-        }
-    });
-
-    webView.loadUrl("file:///android_asset/index.html");
-}
-
-@Override
-protected void onActivityResult(
-        int requestCode,
-        int resultCode,
-        Intent data) {
-
-    super.onActivityResult(requestCode, resultCode, data);
-
-    if (requestCode == FILE_CHOOSER_REQUEST) {
-
-        if (filePathCallback == null) {
-            return;
-        }
-
-        Uri[] results = null;
-
-        if (resultCode == RESULT_OK && data != null) {
-
-            Uri uri = data.getData();
-
-            if (uri != null) {
-                results = new Uri[]{uri};
-            }
-        }
-
-        filePathCallback.onReceiveValue(results);
-        filePathCallback = null;
+        // Buka halaman toko
+        webView.loadUrl(
+                "file:///android_asset/index.html"
+        );
     }
-}
 
-@Override
-public void onBackPressed() {
 
-    if (webView.canGoBack()) {
-        webView.goBack();
-    } else {
-        super.onBackPressed();
+    // Hasil dari Galeri / File Manager
+    @Override
+    protected void onActivityResult(
+            int requestCode,
+            int resultCode,
+            Intent data) {
+
+        super.onActivityResult(
+                requestCode,
+                resultCode,
+                data
+        );
+
+        if (requestCode == FILE_CHOOSER_REQUEST) {
+
+            if (filePathCallback == null) {
+                return;
+            }
+
+            Uri[] results = null;
+
+            // Jika user memilih foto
+            if (resultCode == RESULT_OK && data != null) {
+
+                Uri uri = data.getData();
+
+                if (uri != null) {
+
+                    results =
+                            new Uri[]{uri};
+                }
+            }
+
+            // Kirim foto kembali ke WebView
+            filePathCallback.onReceiveValue(results);
+
+            filePathCallback = null;
+        }
     }
-}
 
+
+    // Tombol kembali HP
+    @Override
+    public void onBackPressed() {
+
+        if (webView.canGoBack()) {
+
+            webView.goBack();
+
+        } else {
+
+            super.onBackPressed();
+        }
+    }
 }
