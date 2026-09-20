@@ -1,4 +1,4 @@
-package com.tokosalam.app;
+kage com.tokosalam.app;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
         });
 
         // GANTI DENGAN URL WEBSITE/APK PEMBELI ANDA
-        webView.loadUrl("https://toko-salam-default-rtdb.asia-southeast1.firebasedatabase.app/);
+        webView.loadUrl("https://meme-project-cab7f.web.app");
     }
 
     private boolean bukaLink(String url) {
