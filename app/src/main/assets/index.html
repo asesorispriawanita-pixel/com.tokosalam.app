@@ -1,28 +1,33 @@
-<!DOCTYPE html><html lang="id">
+Siap. Kita coba versi lengkapnya. Saya pertahankan toko, pencarian, keranjang, checkout WhatsApp, login Admin, tambah/edit/hapus produk, lalu tambahkan Pengaturan Admin tanpa notifikasi checkout.
+Penulisan
+<!DOCTYPE html>
+<html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>TOKO SALAM</title><style>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>TOKO SALAM</title>
+
+<style>
 *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
 body{background:#f5f5f5;color:#222}
 header{background:#0d6efd;color:white;padding:18px 15px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
 .header-content{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo-area{display:flex;align-items:center;gap:10px}
+.profile-photo{width:42px;height:42px;border-radius:50%;object-fit:cover;background:white;border:2px solid white}
 .logo{font-size:24px;font-weight:bold}
-.header-buttons{display:flex;gap:8px}
-.cart-button,.admin-button{border:none;border-radius:20px;padding:9px 14px;font-weight:bold;cursor:pointer}
+.header-buttons{display:flex;gap:7px}
+.header-buttons button{border:0;border-radius:20px;padding:9px 12px;font-weight:bold;cursor:pointer}
 .cart-button{background:white;color:#0d6efd}
 .admin-button{background:#ffc107;color:#222}
 
 .hero{background:white;text-align:center;padding:35px 15px}
 .hero h1{color:#0d6efd;margin-bottom:10px;font-size:32px}
 .hero p{color:#666}
-
 .search-box{max-width:700px;margin:20px auto;padding:0 15px}
 .search-box input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;outline:none}
 
 .container{max-width:1100px;margin:auto;padding:20px 15px 50px}
 .section-title{margin-bottom:20px;font-size:24px}
-
 .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
 .product{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
 .product-image{height:180px;background:#e9ecef;display:flex;align-items:center;justify-content:center;font-size:60px}
@@ -30,18 +35,19 @@ header{background:#0d6efd;color:white;padding:18px 15px;position:sticky;top:0;z-
 .product-name{font-size:18px;font-weight:bold;margin-bottom:8px}
 .product-price{color:#0d6efd;font-weight:bold;font-size:18px;margin-bottom:7px}
 .product-stock{font-size:13px;color:#666;margin-bottom:12px}
-.add-button{width:100%;border:none;background:#0d6efd;color:white;padding:11px;border-radius:8px;cursor:pointer;font-weight:bold}
+.add-button{width:100%;border:0;background:#0d6efd;color:white;padding:11px;border-radius:8px;cursor:pointer;font-weight:bold}
+.add-button:disabled{background:#999;cursor:not-allowed}
 
-.cart-panel,.admin-panel,.login-panel{
-display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
+.cart-panel,.login-panel,.admin-panel,.settings-panel{
+display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200
 }
 
 .cart{position:absolute;right:0;top:0;height:100%;width:min(420px,92%);background:white;padding:20px;overflow-y:auto}
 
 .modal-box{
 position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-background:white;width:min(500px,94%);max-height:92vh;overflow-y:auto;
-padding:22px;border-radius:15px;
+background:white;width:min(520px,94%);max-height:92vh;overflow-y:auto;
+padding:22px;border-radius:15px
 }
 
 .cart-header,.admin-header{
@@ -49,7 +55,7 @@ display:flex;justify-content:space-between;align-items:center;margin-bottom:20px
 }
 
 .close-button{
-border:none;background:#eee;border-radius:50%;width:35px;height:35px;
+border:0;background:#eee;border-radius:50%;width:35px;height:35px;
 cursor:pointer;font-size:18px
 }
 
@@ -59,22 +65,20 @@ cursor:pointer;font-size:18px
 .cart-item-price{color:#666;margin-top:4px}
 
 .quantity{display:flex;align-items:center;gap:7px;margin-top:7px}
-.quantity button{width:28px;height:28px;border:none;background:#0d6efd;color:white;border-radius:5px;cursor:pointer}
+.quantity button{width:28px;height:28px;border:0;background:#0d6efd;color:white;border-radius:5px;cursor:pointer}
 
 .cart-total{font-size:20px;font-weight:bold;margin:20px 0}
-.checkout{width:100%;border:none;padding:14px;background:#198754;color:white;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-
-.empty{text-align:center;color:#777;padding:30px 0}
+.checkout{width:100%;border:0;padding:14px;background:#198754;color:white;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
 
 .form-group{margin-bottom:14px}
 .form-group label{display:block;font-weight:bold;margin-bottom:6px}
-.form-group input,.form-group textarea,.form-group select{
+.form-group input,.form-group textarea{
 width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:15px
 }
 .form-group textarea{min-height:80px;resize:vertical}
 
 .primary-button,.success-button,.danger-button,.secondary-button{
-border:none;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer
+border:0;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer
 }
 .primary-button{background:#0d6efd;color:white}
 .success-button{background:#198754;color:white}
@@ -83,100 +87,308 @@ border:none;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer
 
 .full-button{width:100%;margin-top:5px}
 
+.admin-menu{
+display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px
+}
+.admin-menu button{
+padding:12px;border:0;border-radius:8px;cursor:pointer;font-weight:bold;background:#e9ecef
+}
+
 .admin-product{
-background:#f8f9fa;border:1px solid #ddd;border-radius:10px;
-padding:12px;margin-bottom:10px
+background:#f8f9fa;border:1px solid #ddd;border-radius:10px;padding:12px;margin-bottom:10px
 }
 .admin-product-title{font-weight:bold;font-size:17px;margin-bottom:5px}
 .admin-product-info{color:#666;font-size:14px;margin-bottom:10px}
 .admin-actions{display:flex;gap:7px;flex-wrap:wrap}
 
-.login-title{text-align:center;color:#0d6efd;margin-bottom:20px}
+.settings-section{
+border:1px solid #ddd;border-radius:10px;padding:15px;margin-bottom:15px
+}
+.settings-section h3{margin-bottom:12px;color:#0d6efd}
 
-.admin-menu{
-display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px
+.preview-photo{
+width:100px;height:100px;border-radius:50%;object-fit:cover;
+display:block;margin:10px auto;background:#eee;border:2px solid #ddd
 }
 
-.admin-menu button{padding:12px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;background:#e9ecef}
+.login-title{text-align:center;color:#0d6efd;margin-bottom:20px}
+
+.empty{text-align:center;color:#777;padding:30px 0}
 
 footer{background:#222;color:white;text-align:center;padding:25px 15px}
 
 @media(max-width:500px){
-.logo{font-size:20px}
+.logo{font-size:19px}
 .hero h1{font-size:27px}
 .products{grid-template-columns:repeat(2,1fr);gap:12px}
 .product-image{height:140px;font-size:45px}
 .product-name{font-size:15px}
 .product-price{font-size:15px}
-.header-buttons{gap:4px}
-.cart-button,.admin-button{padding:8px 10px;font-size:12px}
+.header-buttons button{padding:8px 9px;font-size:12px}
 }
-</style></head><body><header>
+</style>
+</head>
+
+<body>
+
+<header>
 <div class="header-content">
-<div class="logo">🛍️ TOKO SALAM</div><div class="header-buttons">
-<button class="admin-button" onclick="openAdminLogin()">🔐 Admin</button>
-<button class="cart-button" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</button>
-</div></div>
-</header><section class="hero">
-<h1>Selamat Datang di TOKO SALAM</h1>
-<p>Belanja mudah, cepat dan nyaman.</p><div class="search-box">
-<input type="text" id="searchInput" placeholder="🔎 Cari produk..." oninput="searchProducts()">
+
+<div class="logo-area">
+<img id="storeProfileHeader" class="profile-photo" src="" alt="Profil">
+<div class="logo">🛍️ TOKO SALAM</div>
 </div>
-</section><main class="container">
+
+<div class="header-buttons">
+<button class="admin-button" onclick="openAdminLogin()">🔐 Admin</button>
+<button class="cart-button" onclick="openCart()">🛒 <span id="cartCount">0</span></button>
+</div>
+
+</div>
+</header>
+
+<section class="hero">
+<h1>Selamat Datang di TOKO SALAM</h1>
+<p>Belanja mudah, cepat dan nyaman.</p>
+
+<div class="search-box">
+<input id="searchInput" type="text"
+placeholder="🔎 Cari produk..."
+oninput="searchProducts()">
+</div>
+</section>
+
+<main class="container">
 <h2 class="section-title">Produk Kami</h2>
 <div class="products" id="productList"></div>
-</main><!-- KERANJANG --><div class="cart-panel" id="cartPanel">
-<div class="cart"><div class="cart-header">
+</main>
+
+
+<!-- KERANJANG -->
+
+<div class="cart-panel" id="cartPanel">
+<div class="cart">
+
+<div class="cart-header">
 <h2>🛒 Keranjang</h2>
 <button class="close-button" onclick="closeCart()">✕</button>
-</div><div id="cartItems"></div><div class="cart-total">
+</div>
+
+<div id="cartItems"></div>
+
+<div class="cart-total">
 Total: <span id="cartTotal">Rp0</span>
-</div><button class="checkout" onclick="checkoutWhatsApp()">
+</div>
+
+<button class="checkout" onclick="checkoutWhatsApp()">
 💬 Pesan via WhatsApp
-</button></div>
-</div><!-- LOGIN ADMIN --><div class="login-panel" id="loginPanel"><div class="modal-box"><div class="admin-header">
+</button>
+
+</div>
+</div>
+
+
+<!-- LOGIN ADMIN -->
+
+<div class="login-panel" id="loginPanel">
+
+<div class="modal-box">
+
+<div class="admin-header">
 <h2 class="login-title">🔐 Login Admin</h2>
 <button class="close-button" onclick="closeAdminLogin()">✕</button>
-</div><div class="form-group">
-<label>Kode Admin</label>
-<input type="password" id="adminPassword" placeholder="Masukkan kode admin">
-</div><button class="primary-button full-button" onclick="loginAdmin()">
+</div>
+
+<div class="form-group">
+<label>Sandi Admin</label>
+<input id="adminPassword" type="password" placeholder="Masukkan sandi">
+</div>
+
+<button class="primary-button full-button" onclick="loginAdmin()">
 🔓 Masuk
-</button></div>
-</div><!-- PANEL ADMIN --><div class="admin-panel" id="adminPanel"><div class="modal-box"><div class="admin-header">
+</button>
+
+</div>
+</div>
+
+
+<!-- PANEL ADMIN -->
+
+<div class="admin-panel" id="adminPanel">
+
+<div class="modal-box">
+
+<div class="admin-header">
 <h2>⚙️ Panel Admin</h2>
 <button class="close-button" onclick="closeAdmin()">✕</button>
-</div><div class="admin-menu">
-<button onclick="showAddProduct()">➕ Tambah Produk</button>
-<button onclick="logoutAdmin()">🚪 Keluar</button>
-</div><div id="adminForm" style="display:none"><h3 id="formTitle">Tambah Produk</h3><br><div class="form-group">
+</div>
+
+<div class="admin-menu">
+
+<button onclick="showAddProduct()">
+➕ Tambah Produk
+</button>
+
+<button onclick="openSettings()">
+⚙️ Pengaturan
+</button>
+
+<button onclick="logoutAdmin()">
+🚪 Keluar
+</button>
+
+</div>
+
+<div id="adminForm" style="display:none">
+
+<h3 id="formTitle">Tambah Produk</h3>
+<br>
+
+<div class="form-group">
 <label>Nama Produk</label>
-<input type="text" id="productName">
-</div><div class="form-group">
+<input id="productName">
+</div>
+
+<div class="form-group">
 <label>Harga</label>
-<input type="number" id="productPrice">
-</div><div class="form-group">
+<input id="productPrice" type="number">
+</div>
+
+<div class="form-group">
 <label>Stok</label>
-<input type="number" id="productStock">
-</div><div class="form-group">
+<input id="productStock" type="number">
+</div>
+
+<div class="form-group">
 <label>Deskripsi</label>
 <textarea id="productDescription"></textarea>
-</div><div class="form-group">
+</div>
+
+<div class="form-group">
 <label>Icon Produk</label>
-<input type="text" id="productIcon" placeholder="Contoh: 📱">
-</div><button class="success-button" onclick="saveProduct()">
+<input id="productIcon" placeholder="Contoh: 📱">
+</div>
+
+<button class="success-button" onclick="saveProduct()">
 💾 Simpan Produk
-</button><button class="secondary-button" onclick="cancelProductForm()">
+</button>
+
+<button class="secondary-button" onclick="cancelProductForm()">
 Batal
-</button><hr style="margin:20px 0"></div><h3>📦 Daftar Produk</h3><br><div id="adminProductList"></div></div>
-</div><footer>
+</button>
+
+<hr style="margin:20px 0">
+</div>
+
+<h3>📦 Daftar Produk</h3>
+<br>
+
+<div id="adminProductList"></div>
+
+</div>
+</div>
+
+
+<!-- PENGATURAN -->
+
+<div class="settings-panel" id="settingsPanel">
+
+<div class="modal-box">
+
+<div class="admin-header">
+<h2>⚙️ Pengaturan</h2>
+<button class="close-button" onclick="closeSettings()">✕</button>
+</div>
+
+
+<div class="settings-section">
+
+<h3>📱 Nomor WhatsApp Toko</h3>
+
+<div class="form-group">
+<label>Nomor WhatsApp</label>
+<input id="settingWhatsapp" type="tel"
+placeholder="Contoh: 6281234567890">
+</div>
+
+<button class="success-button" onclick="saveWhatsapp()">
+💾 Simpan Nomor
+</button>
+
+</div>
+
+
+<div class="settings-section">
+
+<h3>🖼️ Foto Profil TOKO SALAM</h3>
+
+<img id="profilePreview" class="preview-photo" src="" alt="Foto Profil">
+
+<div class="form-group">
+<label>Pilih Foto</label>
+<input id="profileFile" type="file" accept="image/*"
+onchange="previewProfile(event)">
+</div>
+
+<button class="success-button" onclick="saveProfilePhoto()">
+💾 Simpan Foto
+</button>
+
+</div>
+
+
+<div class="settings-section">
+
+<h3>🔐 Ganti Sandi Login Admin</h3>
+
+<div class="form-group">
+<label>Sandi Lama</label>
+<input id="oldPassword" type="password">
+</div>
+
+<div class="form-group">
+<label>Sandi Baru</label>
+<input id="newPassword" type="password">
+</div>
+
+<div class="form-group">
+<label>Ulangi Sandi Baru</label>
+<input id="confirmPassword" type="password">
+</div>
+
+<button class="primary-button" onclick="changeAdminPassword()">
+🔑 Ganti Sandi
+</button>
+
+</div>
+
+
+<div class="settings-section">
+
+<h3>⚙️ Informasi Toko</h3>
+
+<p style="color:#666;line-height:1.6">
+TOKO SALAM<br>
+Pengaturan tersimpan di perangkat ini.
+</p>
+
+</div>
+
+</div>
+</div>
+
+
+<footer>
 <p><strong>TOKO SALAM</strong></p>
 <p>Belanja mudah dan nyaman.</p>
 <p>© 2026 TOKO SALAM</p>
-</footer><script>
+</footer>
+
+
+<script>
 
 /* =========================
-   DATA PRODUK
+DATA AWAL
 ========================= */
 
 const defaultProducts=[
@@ -188,25 +400,40 @@ const defaultProducts=[
 {id:6,name:"Produk 6",price:150000,stock:10,description:"Produk 6 TOKO SALAM",icon:"👟"}
 ];
 
-let products=JSON.parse(localStorage.getItem("tokoSalamProducts")) || defaultProducts;
+let products=
+JSON.parse(localStorage.getItem("tokoSalamProducts")) ||
+defaultProducts;
 
 let cart=[];
 let editingProductId=null;
 
-const ADMIN_CODE="123456";
+let adminPassword=
+localStorage.getItem("tokoSalamAdminPassword") ||
+"123456";
+
+let whatsappNumber=
+localStorage.getItem("tokoSalamWhatsapp") ||
+"6281234567890";
+
+let profilePhoto=
+localStorage.getItem("tokoSalamProfile") ||
+"";
 
 
 /* =========================
-   PENYIMPANAN
+PENYIMPANAN
 ========================= */
 
 function saveProducts(){
-localStorage.setItem("tokoSalamProducts",JSON.stringify(products));
+localStorage.setItem(
+"tokoSalamProducts",
+JSON.stringify(products)
+);
 }
 
 
 /* =========================
-   FORMAT
+FORMAT
 ========================= */
 
 function formatRupiah(n){
@@ -215,7 +442,35 @@ return "Rp"+Number(n).toLocaleString("id-ID");
 
 
 /* =========================
-   TOKO
+PROFIL TOKO
+========================= */
+
+function loadProfile(){
+
+const header=
+document.getElementById("storeProfileHeader");
+
+const preview=
+document.getElementById("profilePreview");
+
+if(profilePhoto){
+
+header.src=profilePhoto;
+preview.src=profilePhoto;
+
+}else{
+
+header.style.display="none";
+
+preview.style.display="none";
+
+}
+
+}
+
+
+/* =========================
+PRODUK
 ========================= */
 
 function displayProducts(list=products){
@@ -225,8 +480,11 @@ const el=document.getElementById("productList");
 el.innerHTML="";
 
 if(!list.length){
+
 el.innerHTML="<p>Tidak ada produk ditemukan.</p>";
+
 return;
+
 }
 
 list.forEach(p=>{
@@ -236,7 +494,7 @@ el.innerHTML+=`
 <div class="product">
 
 <div class="product-image">
-${p.icon || "📦"}
+${p.icon||"📦"}
 </div>
 
 <div class="product-info">
@@ -253,14 +511,14 @@ ${formatRupiah(p.price)}
 Stok: ${p.stock}
 </div>
 
-<button
-class="add-button"
+<button class="add-button"
 onclick="addToCart(${p.id})"
 ${p.stock<=0?"disabled":""}>
 ${p.stock<=0?"Stok Habis":"+ Tambah"}
 </button>
 
 </div>
+
 </div>
 
 `;
@@ -277,8 +535,11 @@ const p=products.find(x=>x.id===id);
 if(!p)return;
 
 if(p.stock<=0){
+
 alert("Stok produk habis.");
+
 return;
+
 }
 
 const e=cart.find(x=>x.id===id);
@@ -286,8 +547,11 @@ const e=cart.find(x=>x.id===id);
 if(e){
 
 if(e.quantity>=p.stock){
+
 alert("Jumlah melebihi stok.");
+
 return;
+
 }
 
 e.quantity++;
@@ -299,8 +563,6 @@ cart.push({...p,quantity:1});
 }
 
 updateCart();
-
-alert(p.name+" ditambahkan ke keranjang.");
 
 }
 
@@ -318,7 +580,8 @@ let countN=0;
 
 if(!cart.length){
 
-items.innerHTML='<div class="empty">Keranjang masih kosong.</div>';
+items.innerHTML=
+'<div class="empty">Keranjang masih kosong.</div>';
 
 }
 
@@ -377,16 +640,21 @@ totalEl.textContent=formatRupiah(total);
 
 function changeQuantity(i,c){
 
-const product=products.find(p=>p.id===cart[i].id);
+const product=
+products.find(p=>p.id===cart[i].id);
 
 cart[i].quantity+=c;
 
 if(product && cart[i].quantity>product.stock){
+
 cart[i].quantity=product.stock;
+
 }
 
 if(cart[i].quantity<=0){
+
 cart.splice(i,1);
+
 }
 
 updateCart();
@@ -421,7 +689,8 @@ document.getElementById("cartPanel").style.display="none";
 
 function searchProducts(){
 
-const k=document.getElementById("searchInput").value.toLowerCase();
+const k=
+document.getElementById("searchInput").value.toLowerCase();
 
 displayProducts(
 products.filter(p=>
@@ -431,6 +700,10 @@ p.name.toLowerCase().includes(k)
 
 }
 
+
+/* =========================
+CHECKOUT
+========================= */
 
 function checkoutWhatsApp(){
 
@@ -442,7 +715,8 @@ return;
 
 }
 
-let msg="Halo TOKO SALAM, saya ingin memesan:%0A%0A";
+let msg=
+"Halo TOKO SALAM, saya ingin memesan:%0A%0A";
 
 let total=0;
 
@@ -452,16 +726,22 @@ const sub=it.price*it.quantity;
 
 total+=sub;
 
-msg+="• "+it.name+" x"+it.quantity+" = "+formatRupiah(sub)+"%0A";
+msg+=
+"• "+it.name+
+" x"+it.quantity+
+" = "+formatRupiah(sub)+
+"%0A";
 
 });
 
-msg+="%0ATotal: "+formatRupiah(total);
-
-const nomorWhatsApp="6281234567890";
+msg+=
+"%0ATotal: "+
+formatRupiah(total);
 
 window.open(
-"https://wa.me/"+nomorWhatsApp+"?text="+msg,
+"https://wa.me/"+
+whatsappNumber+
+"?text="+msg,
 "_blank"
 );
 
@@ -469,7 +749,7 @@ window.open(
 
 
 /* =========================
-   LOGIN ADMIN
+LOGIN ADMIN
 ========================= */
 
 function openAdminLogin(){
@@ -480,19 +760,18 @@ document.getElementById("adminPassword").value="";
 
 }
 
-
 function closeAdminLogin(){
 
 document.getElementById("loginPanel").style.display="none";
 
 }
 
-
 function loginAdmin(){
 
-const password=document.getElementById("adminPassword").value;
+const password=
+document.getElementById("adminPassword").value;
 
-if(password===ADMIN_CODE){
+if(password===adminPassword){
 
 closeAdminLogin();
 
@@ -502,7 +781,7 @@ renderAdminProducts();
 
 }else{
 
-alert("Kode Admin salah.");
+alert("Sandi Admin salah.");
 
 }
 
@@ -510,7 +789,7 @@ alert("Kode Admin salah.");
 
 
 /* =========================
-   ADMIN
+ADMIN
 ========================= */
 
 function closeAdmin(){
@@ -518,7 +797,6 @@ function closeAdmin(){
 document.getElementById("adminPanel").style.display="none";
 
 }
-
 
 function logoutAdmin(){
 
@@ -531,17 +809,10 @@ alert("Admin berhasil keluar.");
 
 function renderAdminProducts(){
 
-const el=document.getElementById("adminProductList");
+const el=
+document.getElementById("adminProductList");
 
 el.innerHTML="";
-
-if(!products.length){
-
-el.innerHTML="<p>Belum ada produk.</p>";
-
-return;
-
-}
 
 products.forEach(p=>{
 
@@ -550,27 +821,25 @@ el.innerHTML+=`
 <div class="admin-product">
 
 <div class="admin-product-title">
-${p.icon || "📦"} ${p.name}
+${p.icon||"📦"} ${p.name}
 </div>
 
 <div class="admin-product-info">
 
 Harga: ${formatRupiah(p.price)}<br>
 Stok: ${p.stock}<br>
-Deskripsi: ${p.description || "-"}
+Deskripsi: ${p.description||"-"}
 
 </div>
 
 <div class="admin-actions">
 
-<button
-class="primary-button"
+<button class="primary-button"
 onclick="editProduct(${p.id})">
 ✏️ Edit
 </button>
 
-<button
-class="danger-button"
+<button class="danger-button"
 onclick="deleteProduct(${p.id})">
 🗑️ Hapus
 </button>
@@ -590,7 +859,8 @@ function showAddProduct(){
 
 editingProductId=null;
 
-document.getElementById("formTitle").textContent="➕ Tambah Produk";
+document.getElementById("formTitle").textContent=
+"➕ Tambah Produk";
 
 document.getElementById("productName").value="";
 document.getElementById("productPrice").value="";
@@ -611,17 +881,16 @@ if(!p)return;
 
 editingProductId=id;
 
-document.getElementById("formTitle").textContent="✏️ Edit Produk";
+document.getElementById("formTitle").textContent=
+"✏️ Edit Produk";
 
 document.getElementById("productName").value=p.name;
-
 document.getElementById("productPrice").value=p.price;
-
 document.getElementById("productStock").value=p.stock;
-
-document.getElementById("productDescription").value=p.description || "";
-
-document.getElementById("productIcon").value=p.icon || "📦";
+document.getElementById("productDescription").value=
+p.description||"";
+document.getElementById("productIcon").value=
+p.icon||"📦";
 
 document.getElementById("adminForm").style.display="block";
 
@@ -639,16 +908,20 @@ document.getElementById("adminForm").style.display="none";
 
 function saveProduct(){
 
-const name=document.getElementById("productName").value.trim();
+const name=
+document.getElementById("productName").value.trim();
 
-const price=Number(document.getElementById("productPrice").value);
+const price=
+Number(document.getElementById("productPrice").value);
 
-const stock=Number(document.getElementById("productStock").value);
+const stock=
+Number(document.getElementById("productStock").value);
 
-const description=document.getElementById("productDescription").value.trim();
+const description=
+document.getElementById("productDescription").value.trim();
 
-const icon=document.getElementById("productIcon").value.trim() || "📦";
-
+const icon=
+document.getElementById("productIcon").value.trim()||"📦";
 
 if(!name){
 
@@ -658,46 +931,31 @@ return;
 
 }
 
-if(price<0){
+if(price<0||stock<0){
 
-alert("Harga tidak valid.");
-
-return;
-
-}
-
-if(stock<0){
-
-alert("Stok tidak valid.");
+alert("Harga atau stok tidak valid.");
 
 return;
 
 }
-
 
 if(editingProductId===null){
 
 products.push({
-
 id:Date.now(),
-
-name:name,
-
-price:price,
-
-stock:stock,
-
-description:description,
-
-icon:icon
-
+name,
+price,
+stock,
+description,
+icon
 });
 
 alert("Produk berhasil ditambahkan.");
 
 }else{
 
-const p=products.find(x=>x.id===editingProductId);
+const p=
+products.find(x=>x.id===editingProductId);
 
 if(p){
 
@@ -712,7 +970,6 @@ p.icon=icon;
 alert("Produk berhasil diperbarui.");
 
 }
-
 
 saveProducts();
 
@@ -733,7 +990,8 @@ if(!p)return;
 
 if(!confirm("Hapus produk "+p.name+"?"))return;
 
-products=products.filter(x=>x.id!==id);
+products=
+products.filter(x=>x.id!==id);
 
 saveProducts();
 
@@ -741,18 +999,179 @@ displayProducts();
 
 renderAdminProducts();
 
-alert("Produk berhasil dihapus.");
+}
+
+
+/* =========================
+PENGATURAN
+========================= */
+
+function openSettings(){
+
+document.getElementById("adminPanel").style.display="none";
+
+document.getElementById("settingsPanel").style.display="block";
+
+document.getElementById("settingWhatsapp").value=
+whatsappNumber;
+
+loadProfile();
+
+}
+
+function closeSettings(){
+
+document.getElementById("settingsPanel").style.display="none";
+
+document.getElementById("adminPanel").style.display="block";
+
+}
+
+
+/* NOMOR WHATSAPP */
+
+function saveWhatsapp(){
+
+let nomor=
+document.getElementById("settingWhatsapp").value.trim();
+
+nomor=nomor.replace(/\D/g,"");
+
+if(nomor.length<10){
+
+alert("Nomor WhatsApp tidak valid.");
+
+return;
+
+}
+
+whatsappNumber=nomor;
+
+localStorage.setItem(
+"tokoSalamWhatsapp",
+whatsappNumber
+);
+
+alert("Nomor WhatsApp berhasil disimpan.");
+
+}
+
+
+/* FOTO PROFIL */
+
+let selectedProfilePhoto="";
+
+function previewProfile(event){
+
+const file=event.target.files[0];
+
+if(!file)return;
+
+const reader=new FileReader();
+
+reader.onload=function(e){
+
+selectedProfilePhoto=e.target.result;
+
+document.getElementById("profilePreview").src=
+selectedProfilePhoto;
+
+document.getElementById("profilePreview").style.display=
+"block";
+
+};
+
+reader.readAsDataURL(file);
+
+}
+
+
+function saveProfilePhoto(){
+
+if(!selectedProfilePhoto){
+
+alert("Pilih foto terlebih dahulu.");
+
+return;
+
+}
+
+profilePhoto=selectedProfilePhoto;
+
+localStorage.setItem(
+"tokoSalamProfile",
+profilePhoto
+);
+
+loadProfile();
+
+alert("Foto profil berhasil disimpan.");
+
+}
+
+
+/* GANTI SANDI */
+
+function changeAdminPassword(){
+
+const oldPassword=
+document.getElementById("oldPassword").value;
+
+const newPassword=
+document.getElementById("newPassword").value;
+
+const confirmPassword=
+document.getElementById("confirmPassword").value;
+
+if(oldPassword!==adminPassword){
+
+alert("Sandi lama salah.");
+
+return;
+
+}
+
+if(newPassword.length<4){
+
+alert("Sandi baru minimal 4 karakter.");
+
+return;
+
+}
+
+if(newPassword!==confirmPassword){
+
+alert("Ulangi sandi baru tidak sama.");
+
+return;
+
+}
+
+adminPassword=newPassword;
+
+localStorage.setItem(
+"tokoSalamAdminPassword",
+adminPassword
+);
+
+document.getElementById("oldPassword").value="";
+document.getElementById("newPassword").value="";
+document.getElementById("confirmPassword").value="";
+
+alert("Sandi Admin berhasil diganti.");
 
 }
 
 
 /* =========================
-   MULAI
+MULAI
 ========================= */
 
 displayProducts();
-
 updateCart();
+loadProfile();
 
-</script></body>
+</script>
+
+</body>
 </html>
