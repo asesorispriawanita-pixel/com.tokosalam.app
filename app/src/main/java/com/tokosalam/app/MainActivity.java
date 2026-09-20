@@ -4,88 +4,152 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
-import android.webkit.ValueCallback;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.webkit.WebSettings;
+import android.webkit.WebChromeClient;
+import android.webkit.ValueCallback;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
     private WebView webView;
-
     private ValueCallback<Uri[]> filePathCallback;
 
     private static final int FILE_CHOOSER_REQUEST = 1001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
-        // Membuat WebView
         webView = new WebView(this);
+
         setContentView(webView);
 
-        // Pengaturan WebView
-        WebSettings settings = webView.getSettings();
+        WebSettings settings =
+                webView.getSettings();
 
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
-
-        // Izinkan akses file
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
 
-        // WebView biasa
-        webView.setWebViewClient(new WebViewClient());
+        /*
+         * Menangani link WhatsApp dan link aplikasi
+         */
+        webView.setWebViewClient(
+                new WebViewClient() {
 
-        // File chooser Android
-        webView.setWebChromeClient(new WebChromeClient() {
+                    @Override
+                    public boolean shouldOverrideUrlLoading(
+                            WebView view,
+                            String url) {
 
-            @Override
-            public boolean onShowFileChooser(
-                    WebView webView,
-                    ValueCallback<Uri[]> filePathCallback,
-                    FileChooserParams fileChooserParams) {
+                        if (url.startsWith("whatsapp://")) {
 
-                // Batalkan callback sebelumnya jika masih ada
-                if (MainActivity.this.filePathCallback != null) {
-                    MainActivity.this.filePathCallback.onReceiveValue(null);
+                            try {
+
+                                Intent intent =
+                                        new Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse(url)
+                                        );
+
+                                startActivity(intent);
+
+                            } catch (Exception e) {
+
+                                Toast.makeText(
+                                        MainActivity.this,
+                                        "WhatsApp tidak ditemukan",
+                                        Toast.LENGTH_SHORT
+                                ).show();
+
+                            }
+
+                            return true;
+                        }
+
+                        if (url.startsWith("https://wa.me/")) {
+
+                            try {
+
+                                Intent intent =
+                                        new Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse(url)
+                                        );
+
+                                startActivity(intent);
+
+                            } catch (Exception e) {
+
+                                view.loadUrl(url);
+
+                            }
+
+                            return true;
+                        }
+
+                        return false;
+                    }
                 }
+        );
 
-                MainActivity.this.filePathCallback =
-                        filePathCallback;
 
-                // Buat pemilih file Android
-                Intent intent =
-                        fileChooserParams.createIntent();
+        /*
+         * Upload foto dari HP
+         */
+        webView.setWebChromeClient(
+                new WebChromeClient() {
 
-                try {
+                    @Override
+                    public boolean onShowFileChooser(
+                            WebView webView,
+                            ValueCallback<Uri[]> callback,
+                            FileChooserParams params) {
 
-                    startActivityForResult(
-                            intent,
-                            FILE_CHOOSER_REQUEST
-                    );
+                        if (filePathCallback != null) {
 
-                } catch (Exception e) {
+                            filePathCallback
+                                    .onReceiveValue(null);
+                        }
 
-                    MainActivity.this.filePathCallback = null;
+                        filePathCallback = callback;
 
-                    return false;
+                        Intent intent =
+                                params.createIntent();
+
+                        try {
+
+                            startActivityForResult(
+                                    intent,
+                                    FILE_CHOOSER_REQUEST
+                            );
+
+                        } catch (Exception e) {
+
+                            filePathCallback = null;
+
+                            return false;
+                        }
+
+                        return true;
+                    }
                 }
+        );
 
-                return true;
-            }
-        });
 
-        // Buka halaman toko
+        /*
+         * Buka halaman utama
+         */
         webView.loadUrl(
                 "file:///android_asset/index.html"
         );
     }
 
 
-    // Hasil dari Galeri / File Manager
     @Override
     protected void onActivityResult(
             int requestCode,
@@ -98,7 +162,8 @@ public class MainActivity extends Activity {
                 data
         );
 
-        if (requestCode == FILE_CHOOSER_REQUEST) {
+        if (requestCode ==
+                FILE_CHOOSER_REQUEST) {
 
             if (filePathCallback == null) {
                 return;
@@ -106,10 +171,11 @@ public class MainActivity extends Activity {
 
             Uri[] results = null;
 
-            // Jika user memilih foto
-            if (resultCode == RESULT_OK && data != null) {
+            if (resultCode == RESULT_OK &&
+                    data != null) {
 
-                Uri uri = data.getData();
+                Uri uri =
+                        data.getData();
 
                 if (uri != null) {
 
@@ -118,15 +184,14 @@ public class MainActivity extends Activity {
                 }
             }
 
-            // Kirim foto kembali ke WebView
-            filePathCallback.onReceiveValue(results);
+            filePathCallback
+                    .onReceiveValue(results);
 
             filePathCallback = null;
         }
     }
 
 
-    // Tombol kembali HP
     @Override
     public void onBackPressed() {
 
