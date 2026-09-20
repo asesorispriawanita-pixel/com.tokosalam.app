@@ -2,126 +2,124 @@ package com.tokosalam.app;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.webkit.WebView;
-import android.webkit.WebSettings;
-import android.webkit.WebChromeClient;
-import android.webkit.ValueCallback;
-import android.net.Uri;
 import android.content.Intent;
+import android.net.Uri;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
+import android.webkit.WebSettings;
+import android.webkit.WebResourceRequest;
+import android.os.Build;
 
 public class MainActivity extends Activity {
 
     private WebView webView;
-    private ValueCallback<Uri[]> filePathCallback;
 
-    private static final int FILE_CHOOSER_REQUEST = 1001;
+    // NOMOR / URL WHATSAPP TOKO SALAM
+    private static final String WHATSAPP_URL =
+            "https://wa.me/111111111";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
 
         webView = new WebView(this);
-
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
 
         settings.setJavaScriptEnabled(true);
         settings.setDomStorageEnabled(true);
+        settings.setDatabaseEnabled(true);
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
 
-        /*
-         * WebView
-         */
-        webView.setWebChromeClient(
-                new WebChromeClient() {
+        webView.setWebViewClient(new WebViewClient() {
 
-                    @Override
-                    public boolean onShowFileChooser(
-                            WebView webView,
-                            ValueCallback<Uri[]> callback,
-                            FileChooserParams params) {
+            @Override
+            public boolean shouldOverrideUrlLoading(
+                    WebView view,
+                    String url) {
 
-                        if (filePathCallback != null) {
-                            filePathCallback.onReceiveValue(null);
-                        }
+                return bukaLink(url);
+            }
 
-                        filePathCallback = callback;
+            @Override
+            public boolean shouldOverrideUrlLoading(
+                    WebView view,
+                    WebResourceRequest request) {
 
-                        Intent intent = params.createIntent();
-
-                        try {
-
-                            startActivityForResult(
-                                    intent,
-                                    FILE_CHOOSER_REQUEST
-                            );
-
-                        } catch (Exception e) {
-
-                            filePathCallback = null;
-                            return false;
-                        }
-
-                        return true;
-                    }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    return bukaLink(request.getUrl().toString());
                 }
-        );
 
-        /*
-         * Buka index.html
-         */
-        webView.loadUrl(
-                "file:///android_asset/index.html"
-        );
+                return false;
+            }
+        });
+
+        // GANTI DENGAN URL WEBSITE/APK PEMBELI ANDA
+        webView.loadUrl("https://meme-project-cab7f.web.app");
     }
 
-    @Override
-    protected void onActivityResult(
-            int requestCode,
-            int resultCode,
-            Intent data) {
+    private boolean bukaLink(String url) {
 
-        super.onActivityResult(
-                requestCode,
-                resultCode,
-                data
-        );
-
-        if (requestCode == FILE_CHOOSER_REQUEST) {
-
-            if (filePathCallback == null) {
-                return;
-            }
-
-            Uri[] results = null;
-
-            if (resultCode == RESULT_OK && data != null) {
-
-                Uri uri = data.getData();
-
-                if (uri != null) {
-                    results = new Uri[]{uri};
-                }
-            }
-
-            filePathCallback.onReceiveValue(results);
-
-            filePathCallback = null;
+        if (url == null) {
+            return false;
         }
+
+        // WhatsApp
+        if (url.startsWith("https://wa.me/") ||
+            url.startsWith("https://api.whatsapp.com/") ||
+            url.startsWith("whatsapp://")) {
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+                return true;
+
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        // Link telepon
+        if (url.startsWith("tel:")) {
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+                return true;
+
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        // Link SMS
+        if (url.startsWith("sms:")) {
+
+            try {
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(Uri.parse(url));
+                startActivity(intent);
+                return true;
+
+            } catch (Exception e) {
+                return false;
+            }
+        }
+
+        // Link biasa tetap dibuka di WebView
+        return false;
     }
 
     @Override
     public void onBackPressed() {
 
         if (webView.canGoBack()) {
-
             webView.goBack();
-
         } else {
-
             super.onBackPressed();
         }
     }
