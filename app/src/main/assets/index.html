@@ -1289,13 +1289,76 @@ WHATSAPP
 
 function checkoutWhatsApp(){
 
-if(!cart.length){
+    if(!cart.length){
+        alert("Keranjang masih kosong.");
+        return;
+    }
 
-alert(
-"Keranjang masih kosong."
-);
+    let message =
+        "Halo TOKO SALAM, saya ingin memesan:\n\n";
 
-return;
+    let total = 0;
+
+    cart.forEach(function(it){
+
+        const sub = it.price * it.quantity;
+
+        total += sub;
+
+        message +=
+            "• " +
+            it.name +
+            " x" +
+            it.quantity +
+            " = " +
+            formatRupiah(sub) +
+            "\n";
+    });
+
+    message +=
+        "\nTotal: " +
+        formatRupiah(total);
+
+    const encodedMessage =
+        encodeURIComponent(message);
+
+    const phone =
+        String(whatsappNumber)
+        .replace(/\D/g,"");
+
+    if(!phone){
+        alert("Nomor WhatsApp toko belum tersedia.");
+        return;
+    }
+
+    /*
+      Coba buka aplikasi WhatsApp
+    */
+
+    const whatsappApp =
+        "whatsapp://send?phone=" +
+        phone +
+        "&text=" +
+        encodedMessage;
+
+    window.location.href = whatsappApp;
+
+    /*
+      Jika WhatsApp tidak tersedia,
+      pengguna dapat menggunakan WhatsApp Web.
+    */
+
+    setTimeout(function(){
+
+        const webUrl =
+            "https://wa.me/" +
+            phone +
+            "?text=" +
+            encodedMessage;
+
+        window.location.href = webUrl;
+
+    },1500);
 
 }
 
