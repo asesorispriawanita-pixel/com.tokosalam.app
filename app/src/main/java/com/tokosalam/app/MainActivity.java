@@ -57,7 +57,7 @@ public class MainActivity extends Activity {
         });
 
         // GANTI DENGAN URL WEBSITE/APK PEMBELI ANDA
-        webView.loadUrl("https://meme-project-cab7f.web.app");
+        webView.loadUrl("https://toko-salam-default-rtdb.asia-southeast1.firebasedatabase.app/);
     }
 
     private boolean bukaLink(String url) {
