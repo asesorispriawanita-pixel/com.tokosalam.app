@@ -1,89 +1,758 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TOKO SALAM</title>
-  <style>
-    *{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
-    body{background:#f5f5f5;color:#222}
-    header{background:#0d6efd;color:white;padding:18px 15px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
-    .header-content{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .logo{font-size:24px;font-weight:bold}
-    .cart-button{background:white;color:#0d6efd;border:none;border-radius:20px;padding:9px 14px;font-weight:bold;cursor:pointer}
-    .hero{background:white;text-align:center;padding:35px 15px}
-    .hero h1{color:#0d6efd;margin-bottom:10px;font-size:32px}
-    .hero p{color:#666}
-    .search-box{max-width:700px;margin:20px auto;padding:0 15px}
-    .search-box input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;outline:none}
-    .container{max-width:1100px;margin:auto;padding:20px 15px 50px}
-    .section-title{margin-bottom:20px;font-size:24px}
-    .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
-    .product{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
-    .product-image{height:180px;background:#e9ecef;display:flex;align-items:center;justify-content:center;font-size:60px}
-    .product-info{padding:15px}
-    .product-name{font-size:18px;font-weight:bold;margin-bottom:8px}
-    .product-price{color:#0d6efd;font-weight:bold;font-size:18px;margin-bottom:12px}
-    .add-button{width:100%;border:none;background:#0d6efd;color:white;padding:11px;border-radius:8px;cursor:pointer;font-weight:bold}
-    .add-button:active{transform:scale(.98)}
-    .cart-panel{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200}
-    .cart{position:absolute;right:0;top:0;height:100%;width:min(420px,92%);background:white;padding:20px;overflow-y:auto}
-    .cart-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-    .close-button{border:none;background:#eee;border-radius:50%;width:35px;height:35px;cursor:pointer;font-size:18px}
-    .cart-item{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:12px 0}
-    .cart-item-info{flex:1}.cart-item-name{font-weight:bold}.cart-item-price{color:#666;margin-top:4px}
-    .quantity{display:flex;align-items:center;gap:7px;margin-top:7px}
-    .quantity button{width:28px;height:28px;border:none;background:#0d6efd;color:white;border-radius:5px;cursor:pointer}
-    .cart-total{font-size:20px;font-weight:bold;margin:20px 0}
-    .checkout{width:100%;border:none;padding:14px;background:#198754;color:white;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
-    .empty{text-align:center;color:#777;padding:30px 0}
-    footer{background:#222;color:white;text-align:center;padding:25px 15px}
-    @media(max-width:500px){.logo{font-size:20px}.hero h1{font-size:27px}.products{grid-template-columns:repeat(2,1fr);gap:12px}.product-image{height:140px;font-size:45px}.product-name{font-size:15px}.product-price{font-size:15px}}
-  </style>
-</head>
-<body>
-<header><div class="header-content"><div class="logo">🛍️ TOKO SALAM</div><button class="cart-button" onclick="openCart()">🛒 Keranjang (<span id="cartCount">0</span>)</button></div></header>
-<section class="hero"><h1>Selamat Datang di TOKO SALAM</h1><p>Belanja mudah, cepat dan nyaman.</p><div class="search-box"><input type="text" id="searchInput" placeholder="🔎 Cari produk..." oninput="searchProducts()"></div></section>
-<main class="container"><h2 class="section-title">Produk Kami</h2><div class="products" id="productList"></div></main>
-<div class="cart-panel" id="cartPanel"><div class="cart"><div class="cart-header"><h2>🛒 Keranjang</h2><button class="close-button" onclick="closeCart()">✕</button></div><div id="cartItems"></div><div class="cart-total">Total: <span id="cartTotal">Rp0</span></div><button class="checkout" onclick="checkoutWhatsApp()">💬 Pesan via WhatsApp</button></div></div>
-<footer><p><strong>TOKO SALAM</strong></p><p>Belanja mudah dan nyaman.</p><p>© 2026 TOKO SALAM</p></footer>
-<script>
-const products=[
-{id:1,name:"Produk 1",price:25000,icon:"📱"},
-{id:2,name:"Produk 2",price:35000,icon:"🎧"},
-{id:3,name:"Produk 3",price:50000,icon:"⌚"},
-{id:4,name:"Produk 4",price:75000,icon:"🎒"},
-{id:5,name:"Produk 5",price:100000,icon:"👕"},
-{id:6,name:"Produk 6",price:150000,icon:"👟"}];
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOKO SALAM</title><style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Arial,sans-serif}
+body{background:#f5f5f5;color:#222}
+header{background:#0d6efd;color:white;padding:18px 15px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.header-content{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.logo{font-size:24px;font-weight:bold}
+.header-buttons{display:flex;gap:8px}
+.cart-button,.admin-button{border:none;border-radius:20px;padding:9px 14px;font-weight:bold;cursor:pointer}
+.cart-button{background:white;color:#0d6efd}
+.admin-button{background:#ffc107;color:#222}
+
+.hero{background:white;text-align:center;padding:35px 15px}
+.hero h1{color:#0d6efd;margin-bottom:10px;font-size:32px}
+.hero p{color:#666}
+
+.search-box{max-width:700px;margin:20px auto;padding:0 15px}
+.search-box input{width:100%;padding:14px;border:1px solid #ddd;border-radius:10px;font-size:16px;outline:none}
+
+.container{max-width:1100px;margin:auto;padding:20px 15px 50px}
+.section-title{margin-bottom:20px;font-size:24px}
+
+.products{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:18px}
+.product{background:white;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.08)}
+.product-image{height:180px;background:#e9ecef;display:flex;align-items:center;justify-content:center;font-size:60px}
+.product-info{padding:15px}
+.product-name{font-size:18px;font-weight:bold;margin-bottom:8px}
+.product-price{color:#0d6efd;font-weight:bold;font-size:18px;margin-bottom:7px}
+.product-stock{font-size:13px;color:#666;margin-bottom:12px}
+.add-button{width:100%;border:none;background:#0d6efd;color:white;padding:11px;border-radius:8px;cursor:pointer;font-weight:bold}
+
+.cart-panel,.admin-panel,.login-panel{
+display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:200;
+}
+
+.cart{position:absolute;right:0;top:0;height:100%;width:min(420px,92%);background:white;padding:20px;overflow-y:auto}
+
+.modal-box{
+position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+background:white;width:min(500px,94%);max-height:92vh;overflow-y:auto;
+padding:22px;border-radius:15px;
+}
+
+.cart-header,.admin-header{
+display:flex;justify-content:space-between;align-items:center;margin-bottom:20px
+}
+
+.close-button{
+border:none;background:#eee;border-radius:50%;width:35px;height:35px;
+cursor:pointer;font-size:18px
+}
+
+.cart-item{display:flex;justify-content:space-between;gap:10px;border-bottom:1px solid #eee;padding:12px 0}
+.cart-item-info{flex:1}
+.cart-item-name{font-weight:bold}
+.cart-item-price{color:#666;margin-top:4px}
+
+.quantity{display:flex;align-items:center;gap:7px;margin-top:7px}
+.quantity button{width:28px;height:28px;border:none;background:#0d6efd;color:white;border-radius:5px;cursor:pointer}
+
+.cart-total{font-size:20px;font-weight:bold;margin:20px 0}
+.checkout{width:100%;border:none;padding:14px;background:#198754;color:white;border-radius:8px;font-size:16px;font-weight:bold;cursor:pointer}
+
+.empty{text-align:center;color:#777;padding:30px 0}
+
+.form-group{margin-bottom:14px}
+.form-group label{display:block;font-weight:bold;margin-bottom:6px}
+.form-group input,.form-group textarea,.form-group select{
+width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;font-size:15px
+}
+.form-group textarea{min-height:80px;resize:vertical}
+
+.primary-button,.success-button,.danger-button,.secondary-button{
+border:none;padding:11px 15px;border-radius:8px;font-weight:bold;cursor:pointer
+}
+.primary-button{background:#0d6efd;color:white}
+.success-button{background:#198754;color:white}
+.danger-button{background:#dc3545;color:white}
+.secondary-button{background:#6c757d;color:white}
+
+.full-button{width:100%;margin-top:5px}
+
+.admin-product{
+background:#f8f9fa;border:1px solid #ddd;border-radius:10px;
+padding:12px;margin-bottom:10px
+}
+.admin-product-title{font-weight:bold;font-size:17px;margin-bottom:5px}
+.admin-product-info{color:#666;font-size:14px;margin-bottom:10px}
+.admin-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+.login-title{text-align:center;color:#0d6efd;margin-bottom:20px}
+
+.admin-menu{
+display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:20px
+}
+
+.admin-menu button{padding:12px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;background:#e9ecef}
+
+footer{background:#222;color:white;text-align:center;padding:25px 15px}
+
+@media(max-width:500px){
+.logo{font-size:20px}
+.hero h1{font-size:27px}
+.products{grid-template-columns:repeat(2,1fr);gap:12px}
+.product-image{height:140px;font-size:45px}
+.product-name{font-size:15px}
+.product-price{font-size:15px}
+.header-buttons{gap:4px}
+.cart-button,.admin-button{padding:8px 10px;font-size:12px}
+}
+</style></head><body><header>
+<div class="header-content">
+<div class="logo">🛍️ TOKO SALAM</div><div class="header-buttons">
+<button class="admin-button" onclick="openAdminLogin()">🔐 Admin</button>
+<button class="cart-button" onclick="openCart()">🛒 (<span id="cartCount">0</span>)</button>
+</div></div>
+</header><section class="hero">
+<h1>Selamat Datang di TOKO SALAM</h1>
+<p>Belanja mudah, cepat dan nyaman.</p><div class="search-box">
+<input type="text" id="searchInput" placeholder="🔎 Cari produk..." oninput="searchProducts()">
+</div>
+</section><main class="container">
+<h2 class="section-title">Produk Kami</h2>
+<div class="products" id="productList"></div>
+</main><!-- KERANJANG --><div class="cart-panel" id="cartPanel">
+<div class="cart"><div class="cart-header">
+<h2>🛒 Keranjang</h2>
+<button class="close-button" onclick="closeCart()">✕</button>
+</div><div id="cartItems"></div><div class="cart-total">
+Total: <span id="cartTotal">Rp0</span>
+</div><button class="checkout" onclick="checkoutWhatsApp()">
+💬 Pesan via WhatsApp
+</button></div>
+</div><!-- LOGIN ADMIN --><div class="login-panel" id="loginPanel"><div class="modal-box"><div class="admin-header">
+<h2 class="login-title">🔐 Login Admin</h2>
+<button class="close-button" onclick="closeAdminLogin()">✕</button>
+</div><div class="form-group">
+<label>Kode Admin</label>
+<input type="password" id="adminPassword" placeholder="Masukkan kode admin">
+</div><button class="primary-button full-button" onclick="loginAdmin()">
+🔓 Masuk
+</button></div>
+</div><!-- PANEL ADMIN --><div class="admin-panel" id="adminPanel"><div class="modal-box"><div class="admin-header">
+<h2>⚙️ Panel Admin</h2>
+<button class="close-button" onclick="closeAdmin()">✕</button>
+</div><div class="admin-menu">
+<button onclick="showAddProduct()">➕ Tambah Produk</button>
+<button onclick="logoutAdmin()">🚪 Keluar</button>
+</div><div id="adminForm" style="display:none"><h3 id="formTitle">Tambah Produk</h3><br><div class="form-group">
+<label>Nama Produk</label>
+<input type="text" id="productName">
+</div><div class="form-group">
+<label>Harga</label>
+<input type="number" id="productPrice">
+</div><div class="form-group">
+<label>Stok</label>
+<input type="number" id="productStock">
+</div><div class="form-group">
+<label>Deskripsi</label>
+<textarea id="productDescription"></textarea>
+</div><div class="form-group">
+<label>Icon Produk</label>
+<input type="text" id="productIcon" placeholder="Contoh: 📱">
+</div><button class="success-button" onclick="saveProduct()">
+💾 Simpan Produk
+</button><button class="secondary-button" onclick="cancelProductForm()">
+Batal
+</button><hr style="margin:20px 0"></div><h3>📦 Daftar Produk</h3><br><div id="adminProductList"></div></div>
+</div><footer>
+<p><strong>TOKO SALAM</strong></p>
+<p>Belanja mudah dan nyaman.</p>
+<p>© 2026 TOKO SALAM</p>
+</footer><script>
+
+/* =========================
+   DATA PRODUK
+========================= */
+
+const defaultProducts=[
+{id:1,name:"Produk 1",price:25000,stock:10,description:"Produk 1 TOKO SALAM",icon:"📱"},
+{id:2,name:"Produk 2",price:35000,stock:10,description:"Produk 2 TOKO SALAM",icon:"🎧"},
+{id:3,name:"Produk 3",price:50000,stock:10,description:"Produk 3 TOKO SALAM",icon:"⌚"},
+{id:4,name:"Produk 4",price:75000,stock:10,description:"Produk 4 TOKO SALAM",icon:"🎒"},
+{id:5,name:"Produk 5",price:100000,stock:10,description:"Produk 5 TOKO SALAM",icon:"👕"},
+{id:6,name:"Produk 6",price:150000,stock:10,description:"Produk 6 TOKO SALAM",icon:"👟"}
+];
+
+let products=JSON.parse(localStorage.getItem("tokoSalamProducts")) || defaultProducts;
+
 let cart=[];
-function formatRupiah(n){return "Rp"+n.toLocaleString("id-ID")}
+let editingProductId=null;
+
+const ADMIN_CODE="123456";
+
+
+/* =========================
+   PENYIMPANAN
+========================= */
+
+function saveProducts(){
+localStorage.setItem("tokoSalamProducts",JSON.stringify(products));
+}
+
+
+/* =========================
+   FORMAT
+========================= */
+
+function formatRupiah(n){
+return "Rp"+Number(n).toLocaleString("id-ID");
+}
+
+
+/* =========================
+   TOKO
+========================= */
+
 function displayProducts(list=products){
- const el=document.getElementById("productList"); el.innerHTML="";
- if(!list.length){el.innerHTML="<p>Tidak ada produk ditemukan.</p>";return}
- list.forEach(p=>el.innerHTML+=`<div class="product"><div class="product-image">${p.icon}</div><div class="product-info"><div class="product-name">${p.name}</div><div class="product-price">${formatRupiah(p.price)}</div><button class="add-button" onclick="addToCart(${p.id})">+ Tambah</button></div></div>`)
+
+const el=document.getElementById("productList");
+
+el.innerHTML="";
+
+if(!list.length){
+el.innerHTML="<p>Tidak ada produk ditemukan.</p>";
+return;
 }
-function addToCart(id){const p=products.find(x=>x.id===id),e=cart.find(x=>x.id===id);if(e)e.quantity++;else cart.push({...p,quantity:1});updateCart();alert(p.name+" ditambahkan ke keranjang.")}
+
+list.forEach(p=>{
+
+el.innerHTML+=`
+
+<div class="product">
+
+<div class="product-image">
+${p.icon || "📦"}
+</div>
+
+<div class="product-info">
+
+<div class="product-name">
+${p.name}
+</div>
+
+<div class="product-price">
+${formatRupiah(p.price)}
+</div>
+
+<div class="product-stock">
+Stok: ${p.stock}
+</div>
+
+<button
+class="add-button"
+onclick="addToCart(${p.id})"
+${p.stock<=0?"disabled":""}>
+${p.stock<=0?"Stok Habis":"+ Tambah"}
+</button>
+
+</div>
+</div>
+
+`;
+
+});
+
+}
+
+
+function addToCart(id){
+
+const p=products.find(x=>x.id===id);
+
+if(!p)return;
+
+if(p.stock<=0){
+alert("Stok produk habis.");
+return;
+}
+
+const e=cart.find(x=>x.id===id);
+
+if(e){
+
+if(e.quantity>=p.stock){
+alert("Jumlah melebihi stok.");
+return;
+}
+
+e.quantity++;
+
+}else{
+
+cart.push({...p,quantity:1});
+
+}
+
+updateCart();
+
+alert(p.name+" ditambahkan ke keranjang.");
+
+}
+
+
 function updateCart(){
- const items=document.getElementById("cartItems"),count=document.getElementById("cartCount"),totalEl=document.getElementById("cartTotal");
- items.innerHTML="";let total=0,countN=0;
- if(!cart.length)items.innerHTML='<div class="empty">Keranjang masih kosong.</div>';
- cart.forEach((it,i)=>{const sub=it.price*it.quantity;total+=sub;countN+=it.quantity;items.innerHTML+=`<div class="cart-item"><div class="cart-item-info"><div class="cart-item-name">${it.icon} ${it.name}</div><div class="cart-item-price">${formatRupiah(it.price)}</div><div class="quantity"><button onclick="changeQuantity(${i},-1)">−</button><span>${it.quantity}</span><button onclick="changeQuantity(${i},1)">+</button><button onclick="removeFromCart(${i})" style="background:#dc3545">🗑</button></div></div><strong>${formatRupiah(sub)}</strong></div>`});
- count.textContent=countN;totalEl.textContent=formatRupiah(total)
+
+const items=document.getElementById("cartItems");
+const count=document.getElementById("cartCount");
+const totalEl=document.getElementById("cartTotal");
+
+items.innerHTML="";
+
+let total=0;
+let countN=0;
+
+if(!cart.length){
+
+items.innerHTML='<div class="empty">Keranjang masih kosong.</div>';
+
 }
-function changeQuantity(i,c){cart[i].quantity+=c;if(cart[i].quantity<=0)cart.splice(i,1);updateCart()}
-function removeFromCart(i){cart.splice(i,1);updateCart()}
-function openCart(){document.getElementById("cartPanel").style.display="block";updateCart()}
-function closeCart(){document.getElementById("cartPanel").style.display="none"}
-function searchProducts(){const k=document.getElementById("searchInput").value.toLowerCase();displayProducts(products.filter(p=>p.name.toLowerCase().includes(k)))}
+
+cart.forEach((it,i)=>{
+
+const sub=it.price*it.quantity;
+
+total+=sub;
+countN+=it.quantity;
+
+items.innerHTML+=`
+
+<div class="cart-item">
+
+<div class="cart-item-info">
+
+<div class="cart-item-name">
+${it.icon} ${it.name}
+</div>
+
+<div class="cart-item-price">
+${formatRupiah(it.price)}
+</div>
+
+<div class="quantity">
+
+<button onclick="changeQuantity(${i},-1)">−</button>
+
+<span>${it.quantity}</span>
+
+<button onclick="changeQuantity(${i},1)">+</button>
+
+<button
+onclick="removeFromCart(${i})"
+style="background:#dc3545">
+🗑
+</button>
+
+</div>
+
+</div>
+
+<strong>${formatRupiah(sub)}</strong>
+
+</div>
+
+`;
+
+});
+
+count.textContent=countN;
+totalEl.textContent=formatRupiah(total);
+
+}
+
+
+function changeQuantity(i,c){
+
+const product=products.find(p=>p.id===cart[i].id);
+
+cart[i].quantity+=c;
+
+if(product && cart[i].quantity>product.stock){
+cart[i].quantity=product.stock;
+}
+
+if(cart[i].quantity<=0){
+cart.splice(i,1);
+}
+
+updateCart();
+
+}
+
+
+function removeFromCart(i){
+
+cart.splice(i,1);
+
+updateCart();
+
+}
+
+
+function openCart(){
+
+document.getElementById("cartPanel").style.display="block";
+
+updateCart();
+
+}
+
+
+function closeCart(){
+
+document.getElementById("cartPanel").style.display="none";
+
+}
+
+
+function searchProducts(){
+
+const k=document.getElementById("searchInput").value.toLowerCase();
+
+displayProducts(
+products.filter(p=>
+p.name.toLowerCase().includes(k)
+)
+);
+
+}
+
+
 function checkoutWhatsApp(){
- if(!cart.length){alert("Keranjang masih kosong.");return}
- let msg="Halo TOKO SALAM, saya ingin memesan:%0A%0A",total=0;
- cart.forEach(it=>{const sub=it.price*it.quantity;total+=sub;msg+="• "+it.name+" x"+it.quantity+" = "+formatRupiah(sub)+"%0A"});
- msg+="%0ATotal: "+formatRupiah(total);
- const nomorWhatsApp="6281234567890";
- window.open("https://wa.me/"+nomorWhatsApp+"?text="+msg,"_blank")
+
+if(!cart.length){
+
+alert("Keranjang masih kosong.");
+
+return;
+
 }
-displayProducts();updateCart();
-</script>
-</body>
+
+let msg="Halo TOKO SALAM, saya ingin memesan:%0A%0A";
+
+let total=0;
+
+cart.forEach(it=>{
+
+const sub=it.price*it.quantity;
+
+total+=sub;
+
+msg+="• "+it.name+" x"+it.quantity+" = "+formatRupiah(sub)+"%0A";
+
+});
+
+msg+="%0ATotal: "+formatRupiah(total);
+
+const nomorWhatsApp="6281234567890";
+
+window.open(
+"https://wa.me/"+nomorWhatsApp+"?text="+msg,
+"_blank"
+);
+
+}
+
+
+/* =========================
+   LOGIN ADMIN
+========================= */
+
+function openAdminLogin(){
+
+document.getElementById("loginPanel").style.display="block";
+
+document.getElementById("adminPassword").value="";
+
+}
+
+
+function closeAdminLogin(){
+
+document.getElementById("loginPanel").style.display="none";
+
+}
+
+
+function loginAdmin(){
+
+const password=document.getElementById("adminPassword").value;
+
+if(password===ADMIN_CODE){
+
+closeAdminLogin();
+
+document.getElementById("adminPanel").style.display="block";
+
+renderAdminProducts();
+
+}else{
+
+alert("Kode Admin salah.");
+
+}
+
+}
+
+
+/* =========================
+   ADMIN
+========================= */
+
+function closeAdmin(){
+
+document.getElementById("adminPanel").style.display="none";
+
+}
+
+
+function logoutAdmin(){
+
+closeAdmin();
+
+alert("Admin berhasil keluar.");
+
+}
+
+
+function renderAdminProducts(){
+
+const el=document.getElementById("adminProductList");
+
+el.innerHTML="";
+
+if(!products.length){
+
+el.innerHTML="<p>Belum ada produk.</p>";
+
+return;
+
+}
+
+products.forEach(p=>{
+
+el.innerHTML+=`
+
+<div class="admin-product">
+
+<div class="admin-product-title">
+${p.icon || "📦"} ${p.name}
+</div>
+
+<div class="admin-product-info">
+
+Harga: ${formatRupiah(p.price)}<br>
+Stok: ${p.stock}<br>
+Deskripsi: ${p.description || "-"}
+
+</div>
+
+<div class="admin-actions">
+
+<button
+class="primary-button"
+onclick="editProduct(${p.id})">
+✏️ Edit
+</button>
+
+<button
+class="danger-button"
+onclick="deleteProduct(${p.id})">
+🗑️ Hapus
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+function showAddProduct(){
+
+editingProductId=null;
+
+document.getElementById("formTitle").textContent="➕ Tambah Produk";
+
+document.getElementById("productName").value="";
+document.getElementById("productPrice").value="";
+document.getElementById("productStock").value="";
+document.getElementById("productDescription").value="";
+document.getElementById("productIcon").value="📦";
+
+document.getElementById("adminForm").style.display="block";
+
+}
+
+
+function editProduct(id){
+
+const p=products.find(x=>x.id===id);
+
+if(!p)return;
+
+editingProductId=id;
+
+document.getElementById("formTitle").textContent="✏️ Edit Produk";
+
+document.getElementById("productName").value=p.name;
+
+document.getElementById("productPrice").value=p.price;
+
+document.getElementById("productStock").value=p.stock;
+
+document.getElementById("productDescription").value=p.description || "";
+
+document.getElementById("productIcon").value=p.icon || "📦";
+
+document.getElementById("adminForm").style.display="block";
+
+}
+
+
+function cancelProductForm(){
+
+editingProductId=null;
+
+document.getElementById("adminForm").style.display="none";
+
+}
+
+
+function saveProduct(){
+
+const name=document.getElementById("productName").value.trim();
+
+const price=Number(document.getElementById("productPrice").value);
+
+const stock=Number(document.getElementById("productStock").value);
+
+const description=document.getElementById("productDescription").value.trim();
+
+const icon=document.getElementById("productIcon").value.trim() || "📦";
+
+
+if(!name){
+
+alert("Nama produk wajib diisi.");
+
+return;
+
+}
+
+if(price<0){
+
+alert("Harga tidak valid.");
+
+return;
+
+}
+
+if(stock<0){
+
+alert("Stok tidak valid.");
+
+return;
+
+}
+
+
+if(editingProductId===null){
+
+products.push({
+
+id:Date.now(),
+
+name:name,
+
+price:price,
+
+stock:stock,
+
+description:description,
+
+icon:icon
+
+});
+
+alert("Produk berhasil ditambahkan.");
+
+}else{
+
+const p=products.find(x=>x.id===editingProductId);
+
+if(p){
+
+p.name=name;
+p.price=price;
+p.stock=stock;
+p.description=description;
+p.icon=icon;
+
+}
+
+alert("Produk berhasil diperbarui.");
+
+}
+
+
+saveProducts();
+
+cancelProductForm();
+
+displayProducts();
+
+renderAdminProducts();
+
+}
+
+
+function deleteProduct(id){
+
+const p=products.find(x=>x.id===id);
+
+if(!p)return;
+
+if(!confirm("Hapus produk "+p.name+"?"))return;
+
+products=products.filter(x=>x.id!==id);
+
+saveProducts();
+
+displayProducts();
+
+renderAdminProducts();
+
+alert("Produk berhasil dihapus.");
+
+}
+
+
+/* =========================
+   MULAI
+========================= */
+
+displayProducts();
+
+updateCart();
+
+</script></body>
 </html>
