@@ -1,2 +1,7 @@
-# com.tokosalam.app
-Cari barang lokal dan sembako minyak sayur mie instan dan lain laim
+# TOKO SALAM
+
+Aplikasi Android WebView untuk TOKO SALAM.
+
+Package: `com.tokosalam.app`
+
+Build APK dilakukan otomatis melalui GitHub Actions.
