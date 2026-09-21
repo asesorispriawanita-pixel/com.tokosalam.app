@@ -9,6 +9,7 @@ import android.webkit.WebViewClient;
 import android.webkit.WebSettings;
 import android.webkit.WebChromeClient;
 import android.webkit.ValueCallback;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -23,6 +24,7 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         webView = new WebView(this);
+
         setContentView(webView);
 
         WebSettings settings = webView.getSettings();
@@ -32,7 +34,40 @@ public class MainActivity extends Activity {
         settings.setAllowFileAccess(true);
         settings.setAllowContentAccess(true);
 
-        webView.setWebViewClient(new WebViewClient());
+        webView.setWebViewClient(new WebViewClient() {
+
+            @Override
+            public boolean shouldOverrideUrlLoading(
+                    WebView view,
+                    String url) {
+
+                if (url.startsWith("whatsapp://") ||
+                    url.startsWith("https://wa.me/")) {
+
+                    try {
+
+                        Intent intent = new Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse(url)
+                        );
+
+                        startActivity(intent);
+
+                    } catch (Exception e) {
+
+                        Toast.makeText(
+                                MainActivity.this,
+                                "WhatsApp tidak ditemukan",
+                                Toast.LENGTH_SHORT
+                        ).show();
+                    }
+
+                    return true;
+                }
+
+                return false;
+            }
+        });
 
         webView.setWebChromeClient(new WebChromeClient() {
 
@@ -60,6 +95,13 @@ public class MainActivity extends Activity {
                 } catch (Exception e) {
 
                     filePathCallback = null;
+
+                    Toast.makeText(
+                            MainActivity.this,
+                            "Tidak dapat membuka galeri",
+                            Toast.LENGTH_SHORT
+                    ).show();
+
                     return false;
                 }
 
@@ -102,6 +144,7 @@ public class MainActivity extends Activity {
             }
 
             filePathCallback.onReceiveValue(results);
+
             filePathCallback = null;
         }
     }
@@ -110,8 +153,11 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
 
         if (webView.canGoBack()) {
+
             webView.goBack();
+
         } else {
+
             super.onBackPressed();
         }
     }
