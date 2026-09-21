@@ -1,1445 +1,866 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>TOKO SALAM</title>
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>TOKO SALAM - PENJUAL</title>
+
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
 <style>
-*{
-box-sizing:border-box;
-margin:0;
-padding:0;
-font-family:Arial,sans-serif
+
+* {
+    box-sizing: border-box;
 }
 
-body{
-background:#f5f5f5;
-color:#222
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f2f2f2;
 }
 
-header{
-background:#0d6efd;
-color:white;
-padding:18px 15px;
-position:sticky;
-top:0;
-z-index:100;
-box-shadow:0 2px 8px rgba(0,0,0,.15)
+header {
+    background: #075e54;
+    color: white;
+    padding: 16px;
+    text-align: center;
 }
 
-.header-content{
-max-width:1100px;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px
+.container {
+    padding: 15px;
+    max-width: 700px;
+    margin: auto;
 }
 
-.logo-area{
-display:flex;
-align-items:center;
-gap:10px
+.card {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px #0002;
 }
 
-.profile-photo{
-width:42px;
-height:42px;
-border-radius:50%;
-object-fit:cover;
-background:white;
-border:2px solid white
+input,
+textarea,
+button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 15px;
 }
 
-.logo{
-font-size:24px;
-font-weight:bold
+textarea {
+    min-height: 90px;
 }
 
-.header-buttons{
-display:flex;
-gap:7px
+button {
+    border: none;
+    background: #075e54;
+    color: white;
+    font-weight: bold;
 }
 
-.header-buttons button{
-border:0;
-border-radius:20px;
-padding:9px 12px;
-font-weight:bold;
-cursor:pointer
+button.danger {
+    background: #c62828;
 }
 
-.cart-button{
-background:white;
-color:#0d6efd
+button.secondary {
+    background: #555;
 }
 
-.hero{
-background:white;
-text-align:center;
-padding:35px 15px
+img.product-image {
+    width: 100%;
+    max-height: 220px;
+    object-fit: contain;
+    border-radius: 8px;
 }
 
-.hero h1{
-color:#0d6efd;
-margin-bottom:10px;
-font-size:32px
+.hidden {
+    display: none;
 }
 
-.hero p{
-color:#666
+.product {
+    border: 1px solid #ddd;
+    padding: 12px;
+    margin-top: 12px;
+    border-radius: 10px;
 }
 
-.search-box{
-max-width:700px;
-margin:20px auto;
-padding:0 15px
+.price {
+    color: #075e54;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.search-box input{
-width:100%;
-padding:14px;
-border:1px solid #ddd;
-border-radius:10px;
-font-size:16px;
-outline:none
+.status {
+    padding: 10px;
+    background: #eee;
+    border-radius: 8px;
+    margin-bottom: 10px;
 }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:20px 15px 50px
-}
-
-.section-title{
-margin-bottom:20px;
-font-size:24px
-}
-
-.products{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:18px
-}
-
-.product{
-background:white;
-border-radius:12px;
-overflow:hidden;
-box-shadow:0 2px 8px rgba(0,0,0,.08)
-}
-
-.product-image{
-height:180px;
-background:#e9ecef;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:60px;
-overflow:hidden
-}
-
-.product-image img{
-width:100%;
-height:100%;
-object-fit:cover
-}
-
-.product-info{
-padding:15px
-}
-
-.product-name{
-font-size:18px;
-font-weight:bold;
-margin-bottom:8px
-}
-
-.product-price{
-color:#0d6efd;
-font-weight:bold;
-font-size:18px;
-margin-bottom:7px
-}
-
-.product-stock{
-font-size:13px;
-color:#666;
-margin-bottom:12px
-}
-
-.add-button{
-width:100%;
-border:0;
-background:#0d6efd;
-color:white;
-padding:11px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold
-}
-
-.add-button:disabled{
-background:#999;
-cursor:not-allowed
-}
-
-.cart-panel{
-display:none;
-position:fixed;
-inset:0;
-background:rgba(0,0,0,.55);
-z-index:200
-}
-
-.cart{
-position:absolute;
-right:0;
-top:0;
-height:100%;
-width:min(420px,92%);
-background:white;
-padding:20px;
-overflow-y:auto
-}
-
-.cart-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:20px
-}
-
-.close-button{
-border:0;
-background:#eee;
-border-radius:50%;
-width:35px;
-height:35px;
-cursor:pointer;
-font-size:18px
-}
-
-.cart-item{
-display:flex;
-justify-content:space-between;
-gap:10px;
-border-bottom:1px solid #eee;
-padding:12px 0
-}
-
-.cart-item-info{
-flex:1
-}
-
-.cart-item-name{
-font-weight:bold
-}
-
-.cart-item-price{
-color:#666;
-margin-top:4px
-}
-
-.quantity{
-display:flex;
-align-items:center;
-gap:7px;
-margin-top:7px
-}
-
-.quantity button{
-width:28px;
-height:28px;
-border:0;
-background:#0d6efd;
-color:white;
-border-radius:5px;
-cursor:pointer
-}
-
-.cart-total{
-font-size:20px;
-font-weight:bold;
-margin:20px 0
-}
-
-.checkout{
-width:100%;
-border:0;
-padding:14px;
-background:#198754;
-color:white;
-border-radius:8px;
-font-size:16px;
-font-weight:bold;
-cursor:pointer
-}
-
-.empty{
-text-align:center;
-color:#777;
-padding:30px 0
-}
-
-.firebase-status{
-font-size:12px;
-text-align:center;
-padding:7px;
-background:#e9f7ef;
-color:#198754
-}
-
-.loading{
-text-align:center;
-padding:40px 10px;
-color:#777
-}
-
-footer{
-background:#222;
-color:white;
-text-align:center;
-padding:25px 15px
-}
-
-@media(max-width:500px){
-
-.logo{
-font-size:19px
-}
-
-.hero h1{
-font-size:27px
-}
-
-.products{
-grid-template-columns:repeat(2,1fr);
-gap:12px
-}
-
-.product-image{
-height:140px;
-font-size:45px
-}
-
-.product-name{
-font-size:15px
-}
-
-.product-price{
-font-size:15px
-}
-
-.header-buttons button{
-padding:8px 9px;
-font-size:12px
-}
-
-}
 </style>
+
 </head>
 
 <body>
 
 <header>
 
-<div class="header-content">
-
-<div class="logo-area">
-
-<img
-id="storeProfileHeader"
-class="profile-photo"
-src=""
-alt="Profil"
-style="display:none">
-
-<div class="logo">
-🛍️ TOKO SALAM
-</div>
-
-</div>
-
-<div class="header-buttons">
-
-<button
-class="cart-button"
-onclick="openCart()">
-
-🛒 <span id="cartCount">0</span>
-
-</button>
-
-</div>
-
-</div>
+<h2>TOKO SALAM</h2>
+<div>PENJUAL / ADMIN</div>
 
 </header>
 
+<div class="container">
 
-<div
-class="firebase-status"
-id="firebaseStatus">
+<!-- LOGIN -->
 
-🔥 Menghubungkan ke TOKO SALAM...
+<div id="loginPanel" class="card">
 
-</div>
-
-
-<section class="hero">
-
-<h1>
-Selamat Datang di TOKO SALAM
-</h1>
-
-<p>
-Belanja mudah, cepat dan nyaman.
-</p>
-
-<div class="search-box">
+<h3>Login Penjual</h3>
 
 <input
-id="searchInput"
-type="text"
-placeholder="🔎 Cari produk..."
-oninput="searchProducts()">
+    type="email"
+    id="email"
+    placeholder="Email Admin">
 
-</div>
+<input
+    type="password"
+    id="password"
+    placeholder="Password">
 
-</section>
-
-
-<main class="container">
-
-<h2 class="section-title">
-Produk Kami
-</h2>
-
-<div
-class="products"
-id="productList">
-
-<div class="loading">
-🔄 Memuat produk...
-</div>
-
-</div>
-
-</main>
-
-
-<!-- KERANJANG -->
-
-<div
-class="cart-panel"
-id="cartPanel">
-
-<div class="cart">
-
-<div class="cart-header">
-
-<h2>
-🛒 Keranjang
-</h2>
-
-<button
-class="close-button"
-onclick="closeCart()">
-
-✕
-
+<button onclick="login()">
+    LOGIN
 </button>
 
-</div>
-
-
-<div id="cartItems"></div>
-
-
-<div class="cart-total">
-
-Total:
-<span id="cartTotal">
-Rp0
-</span>
+<div id="loginStatus"></div>
 
 </div>
 
 
-<button
-class="checkout"
-onclick="checkoutWhatsApp()">
+<!-- ADMIN -->
 
-💬 Pesan via WhatsApp
+<div id="adminPanel" class="hidden">
 
+<div class="card">
+
+<h3>Pengaturan Toko</h3>
+
+<input
+    type="text"
+    id="whatsapp"
+    placeholder="Nomor WhatsApp contoh 628123456789">
+
+<button onclick="saveWhatsApp()">
+    Simpan Nomor WhatsApp
 </button>
 
+<button
+    class="secondary"
+    onclick="logout()">
+    LOGOUT
+</button>
+
+<div id="settingStatus"
+     class="status">
 </div>
 
 </div>
 
 
-<footer>
+<!-- PRODUK -->
 
-<p>
-<strong>TOKO SALAM</strong>
-</p>
+<div class="card">
 
-<p>
-Belanja mudah dan nyaman.
-</p>
+<h3 id="formTitle">
+Tambah Produk
+</h3>
 
-<p>
-© 2026 TOKO SALAM
-</p>
+<input
+    type="hidden"
+    id="editId">
 
-</footer>
+<input
+    type="text"
+    id="nama"
+    placeholder="Nama produk">
+
+<input
+    type="number"
+    id="harga"
+    placeholder="Harga">
+
+<input
+    type="number"
+    id="stok"
+    placeholder="Stok">
+
+<textarea
+    id="deskripsi"
+    placeholder="Deskripsi produk">
+</textarea>
+
+<input
+    type="file"
+    id="foto"
+    accept="image/*">
+
+<button onclick="saveProduct()">
+    SIMPAN PRODUK
+</button>
+
+<button
+    class="secondary"
+    onclick="resetForm()">
+    BATAL / RESET
+</button>
+
+<div id="productStatus"
+     class="status">
+</div>
+
+</div>
 
 
-<!-- FIREBASE -->
-<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
+<div class="card">
+
+<h3>Daftar Produk</h3>
+
+<div id="productList">
+Memuat produk...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
 
 <script>
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyAuw2QucUzalTp56NvuCYamoIAJ-GjzQoU",
+
+    authDomain:
+        "toko-salam.firebaseapp.com",
+
+    projectId:
+        "toko-salam",
+
+    storageBucket:
+        "toko-salam.firebasestorage.app",
+
+    messagingSenderId:
+        "384903652728",
+
+    appId:
+        "1:384903652728:web:24fbb72753ac8f2eef148d",
+
+    measurementId:
+        "G-H40M5ZPE0Q"
+};
+
+
 firebase.initializeApp(firebaseConfig);
+
+const auth = firebase.auth();
 
 const db = firebase.database();
 
-const produkRef = db.ref("produk");
-const pengaturanRef = db.ref("pengaturan");
-</script>
-
-/* =====================================================
-FIREBASE TOKO SALAM
-===================================================== */
-
-const firebaseConfig = {
-    apiKey: "AIzaSyAuw2QucUzalTp56NvuCYamoIAJ-GjzQoU",
-    authDomain: "toko-salam.firebaseapp.com",
-    projectId: "toko-salam",
-    storageBucket: "toko-salam.firebasestorage.app",
-    messagingSenderId: "384903652728",
-    appId: "1:384903652728:web:24fbb72753ac8f2eef148d",
-    measurementId: "G-H40M5ZPE0Q"
-};
-
-    
-firebase.initializeApp(firebaseConfig);
-
-
-const db =
-firebase.database();
-
-
 const produkRef =
-db.ref("produk");
-
+    db.ref("produk");
 
 const pengaturanRef =
-db.ref("pengaturan");
+    db.ref("pengaturan");
 
 
-/* =====================================================
-DATA
-===================================================== */
+/* LOGIN */
 
-function checkoutWhatsApp() {
+function login() {
 
-    if (!whatsappNumber) {
+    const email =
+        document.getElementById("email").value.trim();
 
-        alert("Nomor WhatsApp toko belum tersedia.");
+    const password =
+        document.getElementById("password").value;
+
+    if (!email || !password) {
+
+        document.getElementById("loginStatus")
+            .innerText =
+            "Email dan password wajib diisi.";
 
         return;
     }
 
-    if (cart.length === 0) {
+    auth.signInWithEmailAndPassword(
+        email,
+        password
+    )
+    .then(function() {
 
-        alert("Keranjang masih kosong.");
+        document.getElementById("loginStatus")
+            .innerText =
+            "Login berhasil.";
 
-        return;
-    }
+    })
+    .catch(function(error) {
 
-    let message = "Halo TOKO SALAM,%0A";
-    message += "Saya ingin memesan:%0A%0A";
-
-    cart.forEach(function(item) {
-
-        message +=
-            item.nama +
-            " x" +
-            item.jumlah +
-            " = Rp" +
-            (
-                item.harga *
-                item.jumlah
-            ).toLocaleString("id-ID") +
-            "%0A";
+        document.getElementById("loginStatus")
+            .innerText =
+            "Login gagal: " +
+            error.message;
     });
+}
 
-    message += "%0ATerima kasih.";
 
-    const url =
-        "https://wa.me/" +
-        whatsappNumber +
-        "?text=" +
-        encodeURIComponent(
-            message.replace(/%0A/g, "\n")
+/* STATUS LOGIN */
+
+auth.onAuthStateChanged(function(user) {
+
+    if (user) {
+
+        document
+            .getElementById("loginPanel")
+            .classList.add("hidden");
+
+        document
+            .getElementById("adminPanel")
+            .classList.remove("hidden");
+
+        loadSettings();
+
+        loadProducts();
+
+    } else {
+
+        document
+            .getElementById("loginPanel")
+            .classList.remove("hidden");
+
+        document
+            .getElementById("adminPanel")
+            .classList.add("hidden");
+    }
+});
+
+
+/* LOGOUT */
+
+function logout() {
+
+    auth.signOut();
+}
+
+
+/* NOMOR WHATSAPP */
+
+function loadSettings() {
+
+    pengaturanRef.on(
+        "value",
+        function(snapshot) {
+
+            const data =
+                snapshot.val() || {};
+
+            document
+                .getElementById("whatsapp")
+                .value =
+                data.whatsapp || "";
+        }
+    );
+}
+
+
+function saveWhatsApp() {
+
+    const number =
+        document
+        .getElementById("whatsapp")
+        .value
+        .replace(/\D/g, "");
+
+    if (!number) {
+
+        alert(
+            "Masukkan nomor WhatsApp."
         );
 
-    window.location.href = url;
-}
-
-/* =====================================================
-FORMAT RUPIAH
-===================================================== */
-
-function formatRupiah(n){
-
-return "Rp"+
-Number(n).toLocaleString("id-ID");
-
-}
-
-
-/* =====================================================
-STATUS
-===================================================== */
-
-function setFirebaseStatus(text,success=true){
-
-const el=
-document.getElementById("firebaseStatus");
-
-el.textContent=text;
-
-el.style.color=
-success
-?
-"#198754"
-:
-"#dc3545";
-
-el.style.background=
-success
-?
-"#e9f7ef"
-:
-"#f8d7da";
-
-}
-
-
-/* =====================================================
-REALTIME PRODUK
-===================================================== */
-
-produkRef.on(
-
-"value",
-
-function(snapshot){
-
-try{
-
-if(snapshot.exists()){
-
-const data=
-snapshot.val();
-
-products=
-Object.values(data).map(function(p){
-
-return {
-
-...p,
-
-id:Number(p.id),
-
-name:p.name||"Produk",
-
-price:Number(p.price)||0,
-
-stock:Number(p.stock)||0,
-
-description:p.description||"",
-
-icon:p.icon||"📦",
-
-photo:p.photo||""
-
-};
-
-});
-
-
-}else{
-
-products=[];
-
-}
-
-
-displayProducts();
-
-updateCart();
-
-setFirebaseStatus(
-"🔥 Toko terhubung • Data terbaru"
-);
-
-
-}catch(error){
-
-console.error(error);
-
-setFirebaseStatus(
-"⚠️ Gagal membaca produk",
-false
-);
-
-}
-
-},
-
-function(error){
-
-console.error(error);
-
-setFirebaseStatus(
-"⚠️ Firebase tidak dapat diakses",
-false
-);
-
-}
-
-);
-
-
-/* =====================================================
-REALTIME PENGATURAN
-===================================================== */
-
-pengaturanRef.on(
-
-"value",
-
-function(snapshot){
-
-try{
-
-if(snapshot.exists()){
-
-const data=
-snapshot.val();
-
-
-if(data.whatsapp){
-
-whatsappNumber=
-String(data.whatsapp);
-
-}
-
-
-if(data.profilePhoto){
-
-profilePhoto=
-data.profilePhoto;
-
-updateProfilePhoto();
-
-}
-
-}
-
-}catch(error){
-
-console.error(error);
-
-}
-
-}
-
-);
-
-
-/* =====================================================
-PROFIL TOKO
-===================================================== */
-
-function updateProfilePhoto(){
-
-const header=
-document.getElementById(
-"storeProfileHeader"
-);
-
-
-if(profilePhoto){
-
-header.src=
-profilePhoto;
-
-header.style.display=
-"block";
-
-}else{
-
-header.style.display=
-"none";
-
-}
-
-}
-
-
-/* =====================================================
-TAMPIL PRODUK
-===================================================== */
-
-function displayProducts(list=products){
-
-const el=
-document.getElementById(
-"productList"
-);
-
-el.innerHTML="";
-
-
-if(!list.length){
-
-el.innerHTML=
-`
-<div class="empty">
-Produk belum tersedia.
-</div>
-`;
-
-return;
-
-}
-
-
-list.forEach(function(p){
-
-let imageHTML="";
-
-
-if(p.photo){
-
-imageHTML=
-`
-<img
-src="${p.photo}"
-alt="${p.name}">
-`;
-
-}else{
-
-imageHTML=
-p.icon||"📦";
-
-}
-
-
-el.innerHTML+=
-`
-
-<div class="product">
-
-<div class="product-image">
-
-${imageHTML}
-
-</div>
-
-
-<div class="product-info">
-
-
-<div class="product-name">
-
-${p.name}
-
-</div>
-
-
-<div class="product-price">
-
-${formatRupiah(p.price)}
-
-</div>
-
-
-<div class="product-stock">
-
-Stok: ${p.stock}
-
-</div>
-
-
-<button
-
-class="add-button"
-
-onclick="addToCart(${p.id})"
-
-${p.stock<=0?"disabled":""}>
-
-${p.stock<=0
-?
-"Stok Habis"
-:
-"+ Tambah"}
-
-</button>
-
-
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-/* =====================================================
-CARI PRODUK
-===================================================== */
-
-function searchProducts(){
-
-const keyword=
-document
-.getElementById("searchInput")
-.value
-.toLowerCase()
-.trim();
-
-
-const hasil=
-products.filter(function(p){
-
-return String(p.name)
-.toLowerCase()
-.includes(keyword);
-
-});
-
-
-displayProducts(hasil);
-
-}
-
-
-/* =====================================================
-KERANJANG
-===================================================== */
-
-function addToCart(id){
-
-const p=
-products.find(function(x){
-
-return x.id===id;
-
-});
-
-
-if(!p){
-
-return;
-
-}
-
-
-if(p.stock<=0){
-
-alert(
-"Stok produk habis."
-);
-
-return;
-
-}
-
-
-const existing=
-cart.find(function(x){
-
-return x.id===id;
-
-});
-
-
-if(existing){
-
-if(existing.quantity>=p.stock){
-
-alert(
-"Jumlah melebihi stok."
-);
-
-return;
-
-}
-
-existing.quantity++;
-
-}else{
-
-cart.push({
-
-id:p.id,
-
-name:p.name,
-
-price:p.price,
-
-stock:p.stock,
-
-icon:p.icon,
-
-quantity:1
-
-});
-
-}
-
-
-updateCart();
-
-}
-
-
-/* =====================================================
-UPDATE KERANJANG
-===================================================== */
-
-function updateCart(){
-
-const items=
-document.getElementById(
-"cartItems"
-);
-
-const count=
-document.getElementById(
-"cartCount"
-);
-
-const totalEl=
-document.getElementById(
-"cartTotal"
-);
-
-
-items.innerHTML="";
-
-
-let total=0;
-
-let countN=0;
-
-
-if(!cart.length){
-
-items.innerHTML=
-`
-<div class="empty">
-Keranjang masih kosong.
-</div>
-`;
-
-}
-
-
-cart.forEach(function(it,i){
-
-const currentProduct=
-products.find(function(p){
-
-return p.id===it.id;
-
-});
-
-
-if(currentProduct){
-
-it.name=
-currentProduct.name;
-
-it.price=
-currentProduct.price;
-
-it.stock=
-currentProduct.stock;
-
-it.icon=
-currentProduct.icon;
-
-if(it.quantity>
-currentProduct.stock){
-
-it.quantity=
-currentProduct.stock;
-
-}
-
-}
-
-
-if(it.quantity<=0){
-
-return;
-
-}
-
-
-const sub=
-it.price*it.quantity;
-
-
-total+=sub;
-
-countN+=it.quantity;
-
-
-items.innerHTML+=
-`
-
-<div class="cart-item">
-
-<div class="cart-item-info">
-
-
-<div class="cart-item-name">
-
-${it.icon||"📦"}
-${it.name}
-
-</div>
-
-
-<div class="cart-item-price">
-
-${formatRupiah(it.price)}
-
-</div>
-
-
-<div class="quantity">
-
-
-<button
-onclick="changeQuantity(${i},-1)">
-
-−
-
-</button>
-
-
-<span>
-${it.quantity}
-</span>
-
-
-<button
-onclick="changeQuantity(${i},1)">
-
-+
-
-</button>
-
-
-<button
-onclick="removeFromCart(${i})"
-style="background:#dc3545">
-
-🗑
-
-</button>
-
-
-</div>
-
-</div>
-
-
-<strong>
-
-${formatRupiah(sub)}
-
-</strong>
-
-
-</div>
-
-`;
-
-});
-
-
-/* hapus item stok 0 */
-
-cart=
-cart.filter(function(it){
-
-return it.quantity>0;
-
-});
-
-
-count.textContent=
-countN;
-
-totalEl.textContent=
-formatRupiah(total);
-
-}
-
-
-/* =====================================================
-JUMLAH
-===================================================== */
-
-function changeQuantity(i,c){
-
-if(!cart[i]){
-
-return;
-
-}
-
-
-const product=
-products.find(function(p){
-
-return p.id===cart[i].id;
-
-});
-
-
-if(product){
-
-const newQuantity=
-cart[i].quantity+c;
-
-
-if(newQuantity>product.stock){
-
-alert(
-"Jumlah melebihi stok terbaru."
-);
-
-return;
-
-}
-
-cart[i].quantity=
-newQuantity;
-
-}else{
-
-cart[i].quantity+=c;
-
-}
-
-
-if(cart[i].quantity<=0){
-
-cart.splice(i,1);
-
-}
-
-
-updateCart();
-
-}
-
-
-/* =====================================================
-HAPUS KERANJANG
-===================================================== */
-
-function removeFromCart(i){
-
-cart.splice(i,1);
-
-updateCart();
-
-}
-
-
-/* =====================================================
-BUKA KERANJANG
-===================================================== */
-
-function openCart(){
-
-document.getElementById(
-"cartPanel"
-).style.display="block";
-
-updateCart();
-
-}
-
-
-/* =====================================================
-TUTUP KERANJANG
-===================================================== */
-
-function closeCart(){
-
-document.getElementById(
-"cartPanel"
-).style.display="none";
-
-}
-
-
-/* =====================================================
-WHATSAPP
-===================================================== */
-
-function checkoutWhatsApp(){
-
-    if(!cart.length){
-        alert("Keranjang masih kosong.");
         return;
     }
 
-    let message =
-        "Halo TOKO SALAM, saya ingin memesan:\n\n";
+    pengaturanRef
+        .update({
+            whatsapp: number
+        })
+        .then(function() {
 
-    let total = 0;
+            document
+                .getElementById("settingStatus")
+                .innerText =
+                "Nomor WhatsApp tersimpan.";
 
-    cart.forEach(function(it){
+        })
+        .catch(function(error) {
 
-        const sub = it.price * it.quantity;
+            document
+                .getElementById("settingStatus")
+                .innerText =
+                error.message;
+        });
+}
 
-        total += sub;
 
-        message +=
-            "• " +
-            it.name +
-            " x" +
-            it.quantity +
-            " = " +
-            formatRupiah(sub) +
-            "\n";
+/* FOTO */
+
+function resizeImage(file) {
+
+    return new Promise(function(resolve, reject) {
+
+        const reader =
+            new FileReader();
+
+        reader.onload = function(event) {
+
+            const img =
+                new Image();
+
+            img.onload = function() {
+
+                const maxWidth = 800;
+
+                let width = img.width;
+
+                let height = img.height;
+
+                if (width > maxWidth) {
+
+                    height =
+                        height *
+                        maxWidth /
+                        width;
+
+                    width =
+                        maxWidth;
+                }
+
+                const canvas =
+                    document.createElement("canvas");
+
+                canvas.width = width;
+
+                canvas.height = height;
+
+                const ctx =
+                    canvas.getContext("2d");
+
+                ctx.drawImage(
+                    img,
+                    0,
+                    0,
+                    width,
+                    height
+                );
+
+                const base64 =
+                    canvas.toDataURL(
+                        "image/jpeg",
+                        0.75
+                    );
+
+                resolve(base64);
+            };
+
+            img.onerror = reject;
+
+            img.src =
+                event.target.result;
+        };
+
+        reader.onerror = reject;
+
+        reader.readAsDataURL(file);
     });
+}
 
-    message +=
-        "\nTotal: " +
-        formatRupiah(total);
 
-    const encodedMessage =
-        encodeURIComponent(message);
+/* SIMPAN PRODUK */
 
-    const phone =
-        String(whatsappNumber)
-        .replace(/\D/g,"");
+async function saveProduct() {
 
-    if(!phone){
-        alert("Nomor WhatsApp toko belum tersedia.");
+    if (!auth.currentUser) {
+
+        alert("Silakan login.");
+
         return;
     }
 
-    /*
-      Coba buka aplikasi WhatsApp
-    */
+    const id =
+        document
+        .getElementById("editId")
+        .value;
 
-    const whatsappApp =
-        "whatsapp://send?phone=" +
-        phone +
-        "&text=" +
-        encodedMessage;
+    const nama =
+        document
+        .getElementById("nama")
+        .value
+        .trim();
 
-    window.location.href = whatsappApp;
+    const harga =
+        Number(
+            document
+            .getElementById("harga")
+            .value
+        );
 
-    /*
-      Jika WhatsApp tidak tersedia,
-      pengguna dapat menggunakan WhatsApp Web.
-    */
+    const stok =
+        Number(
+            document
+            .getElementById("stok")
+            .value
+        );
 
-    setTimeout(function(){
+    const deskripsi =
+        document
+        .getElementById("deskripsi")
+        .value
+        .trim();
 
-        const webUrl =
-            "https://wa.me/" +
-            phone +
-            "?text=" +
-            encodedMessage;
+    const fotoInput =
+        document
+        .getElementById("foto");
 
-        window.location.href = webUrl;
+    if (!nama) {
 
-    },1500);
+        alert("Nama produk wajib diisi.");
 
+        return;
+    }
+
+    if (harga < 0 || stok < 0) {
+
+        alert("Harga dan stok tidak boleh negatif.");
+
+        return;
+    }
+
+    try {
+
+        let foto = "";
+
+        if (fotoInput.files.length > 0) {
+
+            foto =
+                await resizeImage(
+                    fotoInput.files[0]
+                );
+
+        } else if (id) {
+
+            const oldSnapshot =
+                await produkRef
+                .child(id)
+                .once("value");
+
+            const oldData =
+                oldSnapshot.val();
+
+            foto =
+                oldData &&
+                oldData.foto
+                    ? oldData.foto
+                    : "";
+        }
+
+        const data = {
+
+            nama: nama,
+
+            harga: harga,
+
+            stok: stok,
+
+            deskripsi: deskripsi,
+
+            foto: foto,
+
+            waktu:
+                Date.now()
+        };
+
+        if (id) {
+
+            await produkRef
+                .child(id)
+                .update(data);
+
+            document
+                .getElementById("productStatus")
+                .innerText =
+                "Produk berhasil diperbarui.";
+
+        } else {
+
+            await produkRef
+                .push(data);
+
+            document
+                .getElementById("productStatus")
+                .innerText =
+                "Produk berhasil ditambahkan.";
+        }
+
+        resetForm();
+
+    } catch (error) {
+
+        document
+            .getElementById("productStatus")
+            .innerText =
+            "Error: " +
+            error.message;
+    }
 }
 
 
-let message=
-"Halo TOKO SALAM, saya ingin memesan:\n\n";
+/* TAMPIL PRODUK */
 
+function loadProducts() {
 
-let total=0;
+    produkRef.on(
+        "value",
+        function(snapshot) {
 
+            const data =
+                snapshot.val() || {};
 
-cart.forEach(function(it){
+            const list =
+                document
+                .getElementById("productList");
 
-const sub=
-it.price*it.quantity;
+            list.innerHTML = "";
 
-total+=sub;
+            const ids =
+                Object.keys(data);
 
+            if (ids.length === 0) {
 
-message+=
-"• "+
-it.name+
-" x"+
-it.quantity+
-" = "+
-formatRupiah(sub)+
-"\n";
+                list.innerHTML =
+                    "Belum ada produk.";
 
-});
+                return;
+            }
 
+            ids.forEach(function(id) {
 
-message+=
-"\nTotal: "+
-formatRupiah(total);
+                const p =
+                    data[id];
 
+                const div =
+                    document.createElement("div");
 
-const url=
-"https://wa.me/"+
-whatsappNumber+
-"?text="+
-encodeURIComponent(message);
+                div.className =
+                    "product";
 
+                div.innerHTML = `
 
-window.open(
-url,
-"_blank"
-);
+                    ${
+                        p.foto
+                        ?
+                        `<img
+                            class="product-image"
+                            src="${p.foto}">
+                        `
+                        :
+                        ""
+                    }
 
+                    <h3>
+                        ${escapeHtml(p.nama || "")}
+                    </h3>
+
+                    <div class="price">
+                        Rp ${Number(
+                            p.harga || 0
+                        ).toLocaleString("id-ID")}
+                    </div>
+
+                    <p>
+                        Stok:
+                        ${Number(p.stok || 0)}
+                    </p>
+
+                    <p>
+                        ${escapeHtml(
+                            p.deskripsi || ""
+                        )}
+                    </p>
+
+                    <button
+                        onclick="editProduct('${id}')">
+                        EDIT
+                    </button>
+
+                    <button
+                        class="danger"
+                        onclick="deleteProduct('${id}')">
+                        HAPUS
+                    </button>
+                `;
+
+                list.appendChild(div);
+            });
+        }
+    );
 }
 
 
-/* =====================================================
-MULAI
-===================================================== */
+/* EDIT */
 
-updateCart();
+async function editProduct(id) {
 
-updateProfilePhoto();
+    const snapshot =
+        await produkRef
+        .child(id)
+        .once("value");
 
+    const p =
+        snapshot.val();
+
+    if (!p) return;
+
+    document
+        .getElementById("editId")
+        .value = id;
+
+    document
+        .getElementById("nama")
+        .value =
+        p.nama || "";
+
+    document
+        .getElementById("harga")
+        .value =
+        p.harga || 0;
+
+    document
+        .getElementById("stok")
+        .value =
+        p.stok || 0;
+
+    document
+        .getElementById("deskripsi")
+        .value =
+        p.deskripsi || "";
+
+    document
+        .getElementById("foto")
+        .value = "";
+
+    document
+        .getElementById("formTitle")
+        .innerText =
+        "Edit Produk";
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+}
+
+
+/* HAPUS */
+
+function deleteProduct(id) {
+
+    if (!confirm(
+        "Hapus produk ini?"
+    )) {
+
+        return;
+    }
+
+    produkRef
+        .child(id)
+        .remove()
+        .then(function() {
+
+            alert(
+                "Produk berhasil dihapus."
+            );
+
+        })
+        .catch(function(error) {
+
+            alert(
+                "Gagal menghapus: " +
+                error.message
+            );
+        });
+}
+
+
+/* RESET */
+
+function resetForm() {
+
+    document
+        .getElementById("editId")
+        .value = "";
+
+    document
+        .getElementById("nama")
+        .value = "";
+
+    document
+        .getElementById("harga")
+        .value = "";
+
+    document
+        .getElementById("stok")
+        .value = "";
+
+    document
+        .getElementById("deskripsi")
+        .value = "";
+
+    document
+        .getElementById("foto")
+        .value = "";
+
+    document
+        .getElementById("formTitle")
+        .innerText =
+        "Tambah Produk";
+}
+
+
+/* KEAMANAN TAMPILAN */
+
+function escapeHtml(text) {
+
+    return String(text)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
 
 </script>
 
