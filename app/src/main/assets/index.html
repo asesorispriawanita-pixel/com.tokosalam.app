@@ -499,47 +499,33 @@ Belanja mudah dan nyaman.
 
 
 <!-- FIREBASE -->
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-app-compat.js"></script>
-
 <script src="https://www.gstatic.com/firebasejs/12.2.1/firebase-database-compat.js"></script>
 
-
 <script>
+firebase.initializeApp(firebaseConfig);
+
+const db = firebase.database();
+
+const produkRef = db.ref("produk");
+const pengaturanRef = db.ref("pengaturan");
+</script>
 
 /* =====================================================
 FIREBASE TOKO SALAM
 ===================================================== */
 
 const firebaseConfig = {
-
-apiKey:
-"AIzaSyAuw2QucUzalTp56NvuCYamoIAJ-GjzQoU",
-
-authDomain:
-"toko-salam.firebaseapp.com",
-
-databaseURL:
-"https://toko-salam-default-rtdb.asia-southeast1.firebasedatabase.app",
-
-projectId:
-"toko-salam",
-
-storageBucket:
-"toko-salam.firebasestorage.app",
-
-messagingSenderId:
-"384903652728",
-
-appId:
-"1:384903652728:web:24fbb72753ac8f2eef148d",
-
-measurementId:
-"G-H40M5ZPE0Q"
-
+    apiKey: "AIzaSyAuw2QucUzalTp56NvuCYamoIAJ-GjzQoU",
+    authDomain: "toko-salam.firebaseapp.com",
+    projectId: "toko-salam",
+    storageBucket: "toko-salam.firebasestorage.app",
+    messagingSenderId: "384903652728",
+    appId: "1:384903652728:web:24fbb72753ac8f2eef148d",
+    measurementId: "G-H40M5ZPE0Q"
 };
 
-
+    
 firebase.initializeApp(firebaseConfig);
 
 
@@ -559,15 +545,51 @@ db.ref("pengaturan");
 DATA
 ===================================================== */
 
-let products=[];
+function checkoutWhatsApp() {
 
-let cart=[];
+    if (!whatsappNumber) {
 
-let whatsappNumber=
-"6281234567890";
+        alert("Nomor WhatsApp toko belum tersedia.");
 
-let profilePhoto="";
+        return;
+    }
 
+    if (cart.length === 0) {
+
+        alert("Keranjang masih kosong.");
+
+        return;
+    }
+
+    let message = "Halo TOKO SALAM,%0A";
+    message += "Saya ingin memesan:%0A%0A";
+
+    cart.forEach(function(item) {
+
+        message +=
+            item.nama +
+            " x" +
+            item.jumlah +
+            " = Rp" +
+            (
+                item.harga *
+                item.jumlah
+            ).toLocaleString("id-ID") +
+            "%0A";
+    });
+
+    message += "%0ATerima kasih.";
+
+    const url =
+        "https://wa.me/" +
+        whatsappNumber +
+        "?text=" +
+        encodeURIComponent(
+            message.replace(/%0A/g, "\n")
+        );
+
+    window.location.href = url;
+}
 
 /* =====================================================
 FORMAT RUPIAH
